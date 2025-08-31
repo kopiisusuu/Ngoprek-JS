@@ -5,40 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NgoprekJS</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="bg-black text-white font-sans">
+<body class="bg-gradient-to-b from-blue-950 to-black text-white font-sans min-h-screen flex flex-col">
   
+  <!-- Header -->
+  <header class="flex justify-between items-center px-6 py-4 bg-blue-950 shadow-lg">
+    <h1 class="text-2xl font-bold">NgoprekJS</h1>
+    <div id="auth-buttons" class="space-x-4">
+      <button id="loginBtn" class="bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-500">Login</button>
+      <button id="registerBtn" class="bg-green-600 px-4 py-2 rounded-xl hover:bg-green-500">Register</button>
+    </div>
+    <div id="user-profile" class="hidden flex items-center space-x-4">
+      <span id="usernameDisplay" class="font-semibold"></span>
+      <button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded-xl hover:bg-red-500">Logout</button>
+    </div>
+  </header>
 
-  <section class="text-center py-16 bg-gradient-to-r from-blue-600 to-black">
-    <h1 class="text-5xl font-bold">NgoprekJS</h1>
-    <p class="mt-4 text-lg">Belajar JavaScript sambil ngoprek 🚀</p>
-    <a href="materi.html" 
-       class="mt-6 inline-block bg-blue-500 px-6 py-2 rounded-xl text-white font-semibold shadow-lg hover:bg-blue-400">
+  <!-- Hero -->
+  <section class="text-center py-16 bg-gradient-to-r from-blue-600 to-blue-400 animate-gradient">
+    <h1 class="text-5xl font-extrabold drop-shadow-lg">NgoprekJS</h1>
+    <p class="mt-4 text-lg">Belajar JavaScript sambil ngoprek</p>
+    <a id="mulaiBelajarBtn"
+       href="#"
+       class="mt-6 inline-block bg-white text-blue-600 px-6 py-2 rounded-xl font-semibold shadow-lg transition">
        Mulai Belajar
     </a>
   </section>
 
-  
-  <section class="max-w-5xl mx-auto py-12 grid md:grid-cols-3 gap-6 px-4">
-    <div class="bg-gray-900 p-6 rounded-2xl shadow-lg">
+  <!-- Cards Materi -->
+  <section class="max-w-5xl mx-auto py-12 grid md:grid-cols-3 gap-6 px-4 flex-grow">
+    <div class="bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:scale-105 transition">
       <h2 class="text-xl font-bold mb-2">Fundamental</h2>
       <p class="text-gray-300">Dasar-dasar JavaScript: variabel, function, array.</p>
     </div>
-    <div class="bg-gray-900 p-6 rounded-2xl shadow-lg">
+    <div class="bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:scale-105 transition">
       <h2 class="text-xl font-bold mb-2">Array Method</h2>
       <p class="text-gray-300">Belajar .map(), .filter(), .reduce().</p>
     </div>
-    <div class="bg-gray-900 p-6 rounded-2xl shadow-lg">
-      <h2 class="text-xl font-bold mb-2">Modern JS</h2>
-      <p class="text-gray-300">ES6+, arrow function, destructuring.</p>
+    <div class="bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+      <h2 class="text-xl font-bold mb-2">Try Catch</h2>
+      <p class="text-gray-300">Try, Catch, Finally,Switch Case, Looping </p>
     </div>
   </section>
 
-  
-  <footer class="bg-gray-950 py-6 text-center text-gray-400">
+  <!-- Footer -->
+  <footer class="bg-blue-950 py-6 text-center text-gray-400">
     <p>© 2025 NgoprekJS. Dibuat untuk belajar JavaScript interaktif.</p>
   </footer>
 
+  <!-- Modal Login/Register -->
+  <div id="authModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+    <div class="bg-white text-black rounded-xl p-6 w-96 shadow-lg">
+      <h2 id="authTitle" class="text-2xl font-bold mb-4">Login</h2>
+      <input id="usernameInput" type="text" placeholder="Username" class="w-full mb-3 px-3 py-2 border rounded-lg">
+      <input id="passwordInput" type="password" placeholder="Password" class="w-full mb-3 px-3 py-2 border rounded-lg">
+      <button id="authSubmit" class="bg-blue-600 w-full py-2 rounded-lg text-white font-semibold">Submit</button>
+      <button id="closeModal" class="mt-3 w-full py-2 rounded-lg border">Batal</button>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
 </body>
 </html>

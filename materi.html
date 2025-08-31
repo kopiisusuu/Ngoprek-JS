@@ -5,23 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Materi NgoprekJS</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="bg-black text-white">
-  
-  <header class="bg-blue-600 py-4 text-center">
-    <h1 class="text-3xl font-bold">Daftar Materi JavaScript</h1>
+<body class="bg-gradient-to-b from-blue-950 to-black text-white font-sans min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-center py-6 shadow-lg">
+    <h1 class="text-3xl font-bold">📚 Materi NgoprekJS</h1>
+    <p class="text-gray-200 mt-2">Klik salah satu materi untuk melihat isi</p>
   </header>
 
-  <main class="max-w-4xl mx-auto py-10 grid md:grid-cols-2 gap-6 px-4" id="materi-container">
-    <!-- Card materi di-generate pakai JS (materi.js) -->
+  <!-- Daftar Card Materi -->
+  <main class="max-w-5xl mx-auto py-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3 px-4" id="materi-list">
+    <!-- Card akan dimuat dari JS -->
   </main>
 
-  <footer class="bg-gray-950 py-6 text-center text-gray-400">
-    <p>© 2025 NgoprekJS</p>
-  </footer>
+  <!-- Modal untuk detail materi -->
+  <div id="materi-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center">
+    <div class="bg-white text-black max-w-2xl p-6 rounded-xl shadow-lg relative">
+      <button id="close-modal" class="absolute top-2 right-2 text-red-500 font-bold">✖</button>
+      <h2 id="materi-title" class="text-2xl font-bold mb-4"></h2>
+      <div id="materi-content" class="text-gray-800 leading-relaxed"></div>
+    </div>
+  </div>
 
-  <script src="assets/js/materi.js"></script>
-  <script src="assets/js/app.js"></script>
+  <script src="js/materi.js"></script>
 </body>
 </html>
