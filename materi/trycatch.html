@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kontrol Alur & Error Handling - JavaScript Playground</title>
+  <style>
+    :root{
+      --bg:#f5f9ff;
+      --card:#ffffff;
+      --ink:#0f172a;          /* slate-900 */
+      --muted:#475569;        /* slate-600 */
+      --primary:#2563eb;      /* blue-600 */
+      --primary-2:#1e40af;    /* blue-800 */
+      --ring:#93c5fd;         /* blue-300 */
+      --ok:#16a34a;           /* green-600 */
+      --warn:#eab308;         /* yellow-500 */
+      --err:#dc2626;          /* red-600 */
+      --code-bg:#0b1220;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* Animated background blobs */
+    .bg-anim{
+      position: fixed; inset: -10% -10% auto -10%; height: 70vh; z-index: -1; filter: blur(40px); opacity: .45;
+      background: radial-gradient(40% 40% at 20% 30%, #93c5fd 0%, transparent 60%),
+                  radial-gradient(30% 30% at 80% 20%, #bfdbfe 0%, transparent 60%),
+                  radial-gradient(30% 30% at 70% 90%, #dbeafe 0%, transparent 60%);
+      animation: floaty 18s ease-in-out infinite alternate;
+    }
+    @keyframes floaty{from{transform: translateY(-20px)} to{transform: translateY(20px)}}
+
+    header{
+      position:sticky; top:0; backdrop-filter: blur(8px); background: color-mix(in oklab, white 70%, transparent);
+      border-bottom: 1px solid #e5eaf5; z-index: 10;
+    }
+    .wrap{max-width:1100px; margin-inline:auto; padding: 16px;}
+    .title{display:flex; align-items:center; gap:12px}
+    .logo{width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, var(--primary), var(--primary-2)); box-shadow:0 6px 24px rgba(37,99,235,.35)}
+    h1{font-size: clamp(20px, 3vw, 28px); margin:0}
+    p.sub{margin:4px 0 0; color:var(--muted)}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+    .tab-btn{
+      padding:10px 14px; border-radius: 999px; background: #eaf2ff; border:1px solid #dbeafe; color: var(--primary-2);
+      cursor:pointer; font-weight:600; transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .tab-btn:hover{transform: translateY(-1px)}
+    .tab-btn.active{background: linear-gradient(180deg,#ffffff,#eaf2ff); box-shadow:0 6px 20px rgba(30,64,175,.15)}
+
+    main{padding: 24px 16px 80px}
+    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:20px}
+    @media (max-width: 920px){ .grid{grid-template-columns: 1fr;}}
+
+    .card{
+      background: var(--card);
+      border:1px solid #e5eaf5;
+      border-radius: 20px; box-shadow: 0 10px 30px rgba(15,23,42,.06);
+      overflow: hidden;
+    }
+    .card .head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-bottom:1px solid #eef2ff}
+    .badge{font-size:12px; padding:4px 10px; border-radius:999px; background:#e0f2fe; color:#075985; border:1px solid #bae6fd}
+    .controls{display:flex; flex-wrap:wrap; gap:8px}
+    .controls button, .controls select{
+      appearance:none; border:1px solid #dbeafe; background:white; color: var(--primary-2); font-weight:600; cursor:pointer;
+      border-radius: 12px; padding:10px 12px; transition: transform .12s ease, box-shadow .2s ease;
+    }
+    .controls button:hover{transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37,99,235,.18)}
+
+    .pane{padding:18px}
+    .pane h3{margin:0 0 10px}
+    .pane p{color:var(--muted); margin:0 0 14px}
+
+    textarea.code{
+      width:100%; min-height:240px; resize:vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: var(--code-bg); color: #e5edff; border:1px solid #1f2a44; border-radius:16px; padding:14px; line-height:1.45;
+      outline:none; box-shadow: inset 0 0 0 1px rgba(147,197,253,.05);
+    }
+
+    .side{
+      display:flex; flex-direction:column; gap:16px;
+    }
+
+    .note{padding:14px 16px; background:#f0f7ff; border:1px dashed #bfdbfe; border-radius:16px}
+    .note strong{color:var(--primary-2)}
+
+    .out{
+      background:#030712; color:#e5e7eb; padding:14px; border-radius:16px; border:1px solid #1f2937; min-height:150px; white-space:pre-wrap;
+    }
+    .out .ok{color: #86efac}
+    .out .warn{color: #fde68a}
+    .out .err{color: #fca5a5}
+
+    footer{color:var(--muted); font-size:12px; text-align:center; padding:30px 16px}
+
+    /* Accordion for quick recap */
+    details{background: white; border:1px solid #e5eaf5; border-radius:16px; padding:12px 14px}
+    details+details{margin-top:8px}
+    summary{cursor:pointer; font-weight:700; color: var(--primary-2)}
+
+    /* Tiny pulse when output updates */
+    .pulse{animation:pulse .8s ease}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,99,235,.0)} 50%{box-shadow:0 0 0 6px rgba(37,99,235,.15)} 100%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}}
+  </style>
+</head>
+<body>
+  <div class="bg-anim" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <div class="title">
+      </div>
+      <nav class="tabs" id="tabs">
+        <button class="tab-btn active" data-tab="trycatch">Try · Catch · Finally</button>
+        <button class="tab-btn" data-tab="switch">Switch Case</button>
+        <button class="tab-btn" data-tab="looping">Looping</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- TRY CATCH FINALLY -->
+    <section class="tab" id="tab-trycatch">
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">Try/Catch/Finally</span>
+            <div class="controls">
+              <select id="example-trycatch" aria-label="Contoh">
+                <option value="basic">Dasar: tangkap error</option>
+                <option value="finally">Dengan finally</option>
+                <option value="custom">Custom Error</option>
+              </select>
+              <button onclick="loadExample('trycatch')">Muat Contoh</button>
+              <button onclick="runCode('trycatch')">Jalankan ▶</button>
+              <button onclick="resetCode('trycatch')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Menangani error tanpa menghentikan aplikasi</h3>
+            <p><strong>try</strong> menjalankan kode yang berpotensi error, <strong>catch</strong> menangkap error, dan <strong>finally</strong> selalu dijalankan (apakah ada error atau tidak).</p>
+            <textarea class="code" id="code-trycatch"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane">
+              <div id="out-trycatch" class="out" aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="note">
+            <strong>Tips:</strong> Coba ubah variabel yang tidak didefinisikan menjadi terdefinisi untuk melihat perbedaan perilaku. Kamu juga bisa <em>throw</em> error sendiri.
+          </div>
+          <details>
+            <summary>Rangkuman konsep</summary>
+            <ul>
+              <li><code>try { ... }</code> — jalankan kode berisiko.</li>
+              <li><code>catch (e) { ... }</code> — tangkap & tangani error.</li>
+              <li><code>finally { ... }</code> — 
+                blok yang <em>selalu</em> dieksekusi.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- SWITCH CASE -->
+    <section class="tab" id="tab-switch" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">Switch Case</span>
+            <div class="controls">
+              <select id="example-switch">
+                <option value="menu">Menu minuman</option>
+                <option value="grade">Konversi nilai ke huruf</option>
+                <option value="fallthrough">Fallthrough (tanpa break)</option>
+              </select>
+              <button onclick="loadExample('switch')">Muat Contoh</button>
+              <button onclick="runCode('switch')">Jalankan ▶</button>
+              <button onclick="resetCode('switch')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Percabangan multi-cabang yang rapi</h3>
+            <p>Gunakan <strong>switch</strong> saat ada banyak kondisi nilai tunggal. Jangan lupa <code>break</code> untuk mencegah <em>fallthrough</em> (kecuali memang diinginkan).</p>
+            <textarea class="code" id="code-switch"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane">
+              <div id="out-switch" class="out" aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="note">
+            <strong>Tips:</strong> Coba ganti nilai variabel untuk memicu cabang yang berbeda. Bandingkan dengan <code>if...else if</code>.
+          </div>
+          <details>
+            <summary>Rangkuman konsep</summary>
+            <ul>
+              <li><code>switch (ekspresi) { case A: ...; break; default: ... }</code></li>
+              <li><em>Fallthrough</em> terjadi saat tidak ada <code>break</code>.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOOPING -->
+    <section class="tab" id="tab-looping" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">Looping</span>
+            <div class="controls">
+              <select id="example-looping">
+                <option value="for">for klasik</option>
+                <option value="while">while</option>
+                <option value="dowhile">do...while</option>
+                <option value="forof">for...of (array)</option>
+              </select>
+              <button onclick="loadExample('looping')">Muat Contoh</button>
+              <button onclick="runCode('looping')">Jalankan ▶</button>
+              <button onclick="resetCode('looping')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Mengulang pekerjaan dengan berbagai cara</h3>
+            <p>Pilih jenis loop yang sesuai: <code>for</code> untuk iterasi terkontrol, <code>while</code> untuk kondisi, <code>do...while</code> untuk eksekusi minimal sekali, dan <code>for...of</code> untuk struktur iterable.</p>
+            <textarea class="code" id="code-looping"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane">
+              <div id="out-looping" class="out" aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="note">
+            <strong>Tips:</strong> Hindari <em>infinite loop</em>: pastikan kondisi berubah menuju berhenti. Kamu bisa <code>break</code> atau <code>continue</code> bila perlu.
+          </div>
+          <details>
+            <summary>Rangkuman konsep</summary>
+            <ul>
+              <li><code>for (init; kondisi; update)</code></li>
+              <li><code>while (kondisi)</code> · <code>do { ... } while (kondisi)</code></li>
+              <li><code>for (const x of arr)</code> untuk iterable.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- Tab Switching ---
+    const tabsNav = document.getElementById('tabs');
+    const tabButtons = Array.from(tabsNav.querySelectorAll('.tab-btn'));
+
+    tabButtons.forEach(btn=>{
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.tab;
+        document.querySelectorAll('section.tab').forEach(sec=>{
+          sec.hidden = sec.id !== `tab-${target}`;
+        });
+      });
+    });
+
+    // --- Examples ---
+    const initialExamples = {
+      trycatch: {
+        basic:
+`// Contoh dasar: menangkap error runtime
+function demo() {
+  console.log('Mulai demo try/catch');
+  try {
+    console.log(user.name); // user tidak terdefinisi -> error
+  } catch (e) {
+    console.log('Terjadi error:', e.message);
+  }
+  console.log('Kode di bawah tetap berjalan');
+}
+
+demo();`,
+        finally:
+`// Menunjukkan blok finally selalu jalan
+function bacaData(masuk) {
+  try {
+    if (!masuk) throw new Error('Data kosong');
+    console.log('Proses data:', masuk);
+    return 'Sukses';
+  } catch (e) {
+    console.log('Tangkap error ->', e.message);
+    return 'Gagal';
+  } finally {
+    console.log('Bersihkan resource (finally)');
+  }
+}
+
+console.log('Hasil:', bacaData('Hallo'));
+console.log('Hasil:', bacaData(''));// picu error`,
+        custom:
+`// Melempar error custom
+class InputError extends Error { constructor(msg){ super(msg); this.name = 'InputError'; } }
+function hitungBagi(a, b){
+  if (typeof a !== 'number' || typeof b !== 'number') throw new InputError('Harus angka');
+  if (b === 0) throw new InputError('Pembagi tidak boleh 0');
+  return a / b;
+}
+
+try {
+  console.log('10 / 2 =', hitungBagi(10,2));
+  console.log('10 / 0 =', hitungBagi(10,0)); // error
+} catch (e){
+  console.log(e.name + ': ' + e.message);
+}`
+      },
+      switch: {
+        menu:
+`// Pilihan minuman dengan switch
+const pilihan = 'kopi';
+let harga;
+
+switch(pilihan){
+  case 'kopi':
+    harga = 15000; break;
+  case 'teh':
+    harga = 12000; break;
+  case 'coklat':
+    harga = 18000; break;
+  default:
+    harga = 0; // tidak tersedia
+}
+
+console.log('Pesanan:', pilihan, '| Harga:', harga);`,
+        grade:
+`// Konversi nilai ke huruf
+const nilai = 82;
+let huruf;
+
+switch(true){
+  case (nilai >= 90): huruf = 'A'; break;
+  case (nilai >= 80): huruf = 'B'; break;
+  case (nilai >= 70): huruf = 'C'; break;
+  case (nilai >= 60): huruf = 'D'; break;
+  default: huruf = 'E';
+}
+
+console.log('Nilai:', nilai, '→', huruf);`,
+        fallthrough:
+`// Contoh fallthrough (tanpa break)
+const hari = 'sabtu';
+let pesan = '';
+
+switch(hari){
+  case 'sabtu':
+  case 'minggu':
+    pesan = 'Weekend!';
+    break;
+  case 'senin':
+    pesan = 'Mulai minggu baru';
+    break;
+  default:
+    pesan = 'Hari kerja biasa';
+}
+
+console.log(hari, '→', pesan);`
+      },
+      looping: {
+        for:
+`// for klasik
+for (let i=1; i<=5; i++){
+  console.log('Iterasi ke', i);
+}`,
+        while:
+`// while: berhenti saat kondisi salah
+let n = 3;
+while(n > 0){
+  console.log('Hitung mundur', n);
+  n--;
+}
+console.log('Go!');`,
+        dowhile:
+`// do...while: pasti jalan minimal 1 kali
+let pass = '';
+let tries = 0;
+
+do {
+  tries++;
+  if (tries === 1) console.log('Coba masukkan password (simulasi)');
+  pass = pass || '';
+} while (pass !== 'rahasia' && tries < 3);
+
+console.log('Percobaan:', tries);`,
+        forof:
+`// for...of pada array
+const buah = ['apel','jeruk','mangga'];
+for (const item of buah){
+  console.log('Buah:', item);
+}`
+      }
+    };
+
+    const originals = {}; // store original code for reset
+
+    function setCode(id, value){
+      const ta = document.getElementById('code-'+id);
+      ta.value = value;
+      originals[id] = value;
+    }
+
+    function loadExample(section){
+      const select = document.getElementById('example-'+section);
+      const key = select.value;
+      const code = initialExamples[section][key];
+      setCode(section, code);
+      flashOut(section, 'Contoh dimuat. Tekan Jalankan ▶');
+    }
+
+    function resetCode(section){
+      if (originals[section] != null) {
+        setCode(section, originals[section]);
+        flashOut(section, 'Kode direset ke contoh terakhir.');
+      }
+    }
+
+    function flashOut(section, msg){
+      const out = document.getElementById('out-'+section);
+      out.textContent = msg;
+      out.classList.remove('pulse');
+      void out.offsetWidth; // reflow to restart animation
+      out.classList.add('pulse');
+    }
+
+    // Safe runner: capture console.log & error
+    function runCode(section){
+      const code = document.getElementById('code-'+section).value;
+      const outEl = document.getElementById('out-'+section);
+
+      const lines = [];
+      const origLog = console.log;
+      const origWarn = console.warn;
+      const origErr = console.error;
+
+      console.log = (...args)=>{ lines.push(args.join(' ')); origLog.apply(console, args); };
+      console.warn = (...args)=>{ lines.push('[WARN] '+args.join(' ')); origWarn.apply(console, args); };
+      console.error = (...args)=>{ lines.push('[ERROR] '+args.join(' ')); origErr.apply(console, args); };
+
+      try {
+        // Use Function constructor to create isolated scope
+        const fn = new Function(code);
+        const result = fn();
+        if (result !== undefined) lines.push(String(result));
+        outEl.innerText = lines.join('\n') || '✔ Kode dijalankan tanpa output (gunakan console.log untuk menampilkan).';
+      } catch (e){
+        outEl.innerText = '✖ Error: '+ e.name + ' — ' + e.message + (e.stack ? '\n' + e.stack.split('\n')[1] : '');
+      } finally {
+        console.log = origLog; console.warn = origWarn; console.error = origErr;
+        outEl.classList.remove('pulse'); void outEl.offsetWidth; outEl.classList.add('pulse');
+      }
+    }
+
+    // Initialize defaults
+    loadExample('trycatch');
+    loadExample('switch');
+    loadExample('looping');
+  </script>
+</body>
+</html>
