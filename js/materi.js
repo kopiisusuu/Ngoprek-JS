@@ -45,6 +45,11 @@ const materi = [
     title: "Try Catch",
     type: "page",
     link: "materi/trycatch.html"
+  },
+  {
+    title: "ForEach, Find, Some, Every, Includes",
+    type: "page",
+    link: "materi/forEach.html"
   }
 ];
 

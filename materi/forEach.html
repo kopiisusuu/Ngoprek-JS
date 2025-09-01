@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Supermarket Array Methods – JavaScript Playground</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --bg:#f5f9ff;
+      --card:#ffffff;
+      --ink:#0f172a;          /* slate-900 */
+      --muted:#475569;        /* slate-600 */
+      --primary:#2563eb;      /* blue-600 */
+      --primary-2:#1e40af;    /* blue-800 */
+      --ring:#93c5fd;         /* blue-300 */
+      --ok:#16a34a;           /* green-600 */
+      --warn:#eab308;         /* yellow-500 */
+      --err:#dc2626;          /* red-600 */
+      --code-bg:#0b1220;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* Animated background blobs */
+    .bg-anim{
+      position: fixed; inset: -10% -10% auto -10%; height: 70vh; z-index: -1; filter: blur(40px); opacity: .45;
+      background: radial-gradient(40% 40% at 20% 30%, #93c5fd 0%, transparent 60%),
+                  radial-gradient(30% 30% at 80% 20%, #bfdbfe 0%, transparent 60%),
+                  radial-gradient(30% 30% at 70% 90%, #dbeafe 0%, transparent 60%);
+      animation: floaty 18s ease-in-out infinite alternate;
+    }
+    @keyframes floaty{from{transform: translateY(-20px)} to{transform: translateY(20px)}}
+
+    header{
+      position:sticky; top:0; backdrop-filter: blur(8px); background: color-mix(in oklab, white 70%, transparent);
+      border-bottom: 1px solid #e5eaf5; z-index: 10;
+    }
+    .wrap{max-width:1100px; margin-inline:auto; padding: 16px;}
+    .title{display:flex; align-items:center; gap:12px}
+    .logo{width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, var(--primary), var(--primary-2)); box-shadow:0 6px 24px rgba(37,99,235,.35)}
+    h1{font-size: clamp(20px, 3vw, 28px); margin:0}
+    p.sub{margin:4px 0 0; color:var(--muted)}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+    .tab-btn{
+      padding:10px 14px; border-radius: 999px; background: #eaf2ff; border:1px solid #dbeafe; color: var(--primary-2);
+      cursor:pointer; font-weight:600; transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .tab-btn:hover{transform: translateY(-1px)}
+    .tab-btn.active{background: linear-gradient(180deg,#ffffff,#eaf2ff); box-shadow:0 6px 20px rgba(30,64,175,.15)}
+
+    main{padding: 24px 16px 80px}
+    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:20px}
+    @media (max-width: 920px){ .grid{grid-template-columns: 1fr;}}
+
+    .card{
+      background: var(--card);
+      border:1px solid #e5eaf5;
+      border-radius: 20px; box-shadow: 0 10px 30px rgba(15,23,42,.06);
+      overflow: hidden;
+    }
+    .card .head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-bottom:1px solid #eef2ff}
+    .badge{font-size:12px; padding:4px 10px; border-radius:999px; background:#e0f2fe; color:#075985; border:1px solid #bae6fd}
+    .controls{display:flex; flex-wrap:wrap; gap:8px}
+    .controls button, .controls select{
+      appearance:none; border:1px solid #dbeafe; background:white; color: var(--primary-2); font-weight:600; cursor:pointer;
+      border-radius: 12px; padding:10px 12px; transition: transform .12s ease, box-shadow .2s ease;
+    }
+    .controls button:hover{transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37,99,235,.18)}
+
+    .pane{padding:18px}
+    .pane h3{margin:0 0 10px}
+    .pane p{color:var(--muted); margin:0 0 14px}
+
+    textarea.code{
+      width:100%; min-height:240px; resize:vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: var(--code-bg); color: #e5edff; border:1px solid #1f2a44; border-radius:16px; padding:14px; line-height:1.45;
+      outline:none; box-shadow: inset 0 0 0 1px rgba(147,197,253,.05);
+    }
+
+    .side{display:flex; flex-direction:column; gap:16px;}
+
+    .note{padding:14px 16px; background:#f0f7ff; border:1px dashed #bfdbfe; border-radius:16px}
+    .note strong{color:var(--primary-2)}
+
+    .out{background:#030712; color:#e5e7eb; padding:14px; border-radius:16px; border:1px solid #1f2937; min-height:150px; white-space:pre-wrap;}
+    .out .ok{color: #86efac}
+    .out .warn{color: #fde68a}
+    .out .err{color: #fca5a5}
+
+    footer{color:var(--muted); font-size:12px; text-align:center; padding:30px 16px}
+
+    details{background: white; border:1px solid #e5eaf5; border-radius:16px; padding:12px 14px}
+    details+details{margin-top:8px}
+    summary{cursor:pointer; font-weight:700; color: var(--primary-2)}
+
+    .pulse{animation:pulse .8s ease}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,99,235,.0)} 50%{box-shadow:0 0 0 6px rgba(37,99,235,.15)} 100%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}}
+
+    /* Rack grid using Tailwind fallback */
+    .rack{display:grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap:12px}
+    .rack .it{background:white; border:1px solid #e5eaf5; border-radius:14px; padding:10px; text-align:center; box-shadow:0 4px 16px rgba(15,23,42,.06)}
+    .rack .it img{width:72px; height:72px; object-fit:contain}
+  </style>
+</head>
+<body>
+  <div class="bg-anim" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <div class="title">
+        <div>
+          <div class="flex gap-2">
+            <h1><a href="../materi.html">❌</a></h1>
+            <h1>Supermarket Array Methods</h1>
+          </div>
+          
+          <p class="sub">Belajar <code>forEach</code>, <code>find</code>, <code>some</code>, <code>every</code>, <code>includes</code> sambil belanja 🛒</p>
+        </div>
+      </div>
+      <nav class="tabs" id="tabs">
+        <button class="tab-btn active" data-tab="rak">Mission 0 · Rak Belanja</button>
+        <button class="tab-btn" data-tab="foreach">Mission 1 · forEach</button>
+        <button class="tab-btn" data-tab="find">Mission 2 · find</button>
+        <button class="tab-btn" data-tab="some">Mission 3 · some</button>
+        <button class="tab-btn" data-tab="every">Mission 4 · every</button>
+        <button class="tab-btn" data-tab="includes">Mission 5 · includes</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- RAK BELANJA -->
+    <section class="tab" id="tab-rak">
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">Rak Supermarket</span>
+            <div class="controls">
+              <button onclick="resetCart()">Kosongkan Keranjang</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Pilih barang untuk dimasukkan ke keranjang</h3>
+            <div class="rack" id="rack"></div>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Preview Keranjang</span>
+              <div class="controls">
+                <button onclick="saveCartToLocal()">Simpan</button>
+                <button onclick="loadCartFromLocal()">Muat</button>
+              </div>
+            </div>
+            <div class="pane">
+              <div id="cartEmpty" class="note">Keranjang kosong. Pilih barang dari rak.</div>
+              <ul id="cartList" class="list-disc pl-5"></ul>
+              <div class="mt-3 text-sm text-slate-600">Total item: <span id="cartCount">0</span> · Total harga: <strong id="cartTotal">0</strong></div>
+            </div>
+          </div>
+          <div class="note">
+            <strong>Tips:</strong> Klik item di preview untuk menghapus satuan. Pakai tombol <em>Kosongkan</em> untuk reset cepat.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOREACH -->
+    <section class="tab" id="tab-foreach" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">forEach</span>
+            <div class="controls">
+              <select id="example-foreach" aria-label="Contoh">
+                <option value="list">Tampilkan daftar</option>
+                <option value="total">Hitung total harga</option>
+                <option value="badge">Render label harga</option>
+              </select>
+              <button onclick="loadExample('foreach')">Muat Contoh</button>
+              <button onclick="runCode('foreach')">Jalankan ▶</button>
+              <button onclick="resetCode('foreach')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Iterasi setiap item dalam <code>cart</code></h3>
+            <p><code>forEach</code> mengeksekusi fungsi untuk tiap elemen. Cocok untuk menampilkan daftar atau akumulasi nilai.</p>
+            <textarea class="code" id="code-foreach"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane"><div id="out-foreach" class="out" aria-live="polite"></div></div>
+          </div>
+          <details>
+            <summary>Rangkuman konsep</summary>
+            <ul>
+              <li><code>array.forEach((item, i) => { ... })</code></li>
+              <li>Tidak mengembalikan array baru.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIND -->
+    <section class="tab" id="tab-find" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">find</span>
+            <div class="controls">
+              <select id="example-find">
+                <option value="byName">Cari item bernama 'Apple'</option>
+                <option value="expensive">Cari pertama harga > 30rb</option>
+                <option value="outOfStock">Cari yang stoknya habis</option>
+              </select>
+              <button onclick="loadExample('find')">Muat Contoh</button>
+              <button onclick="runCode('find')">Jalankan ▶</button>
+              <button onclick="resetCode('find')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Ambil elemen pertama yang cocok</h3>
+            <textarea class="code" id="code-find"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane"><div id="out-find" class="out" aria-live="polite"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOME -->
+    <section class="tab" id="tab-some" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">some</span>
+            <div class="controls">
+              <select id="example-some">
+                <option value="hasMilk">Ada 'Milk'?</option>
+                <option value="anyDiscount">Ada diskon?</option>
+              </select>
+              <button onclick="loadExample('some')">Muat Contoh</button>
+              <button onclick="runCode('some')">Jalankan ▶</button>
+              <button onclick="resetCode('some')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Apakah minimal satu elemen memenuhi kondisi?</h3>
+            <textarea class="code" id="code-some"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane"><div id="out-some" class="out" aria-live="polite"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVERY -->
+    <section class="tab" id="tab-every" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">every</span>
+            <div class="controls">
+              <select id="example-every">
+                <option value="allUnder50k">Semua harga < 50rb?</option>
+                <option value="allInStock">Semua stok tersedia?</option>
+              </select>
+              <button onclick="loadExample('every')">Muat Contoh</button>
+              <button onclick="runCode('every')">Jalankan ▶</button>
+              <button onclick="resetCode('every')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Apakah semua elemen memenuhi kondisi?</h3>
+            <textarea class="code" id="code-every"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane"><div id="out-every" class="out" aria-live="polite"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INCLUDES -->
+    <section class="tab" id="tab-includes" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="head">
+            <span class="badge">includes</span>
+            <div class="controls">
+              <select id="example-includes">
+                <option value="hasCheese">Apakah ada 'Cheese'?</option>
+                <option value="rawNames">Cek nama dengan includes()</option>
+              </select>
+              <button onclick="loadExample('includes')">Muat Contoh</button>
+              <button onclick="runCode('includes')">Jalankan ▶</button>
+              <button onclick="resetCode('includes')">Reset ↺</button>
+            </div>
+          </div>
+          <div class="pane">
+            <h3>Cek keberadaan nilai di array</h3>
+            <textarea class="code" id="code-includes"></textarea>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="head"><span class="badge">Output</span></div>
+            <div class="pane"><div id="out-includes" class="out" aria-live="polite"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>© 2025 Supermarket JS Game</footer>
+
+  <script>
+    // ---------- Data Rak (samakan path dengan repo keduamu) ----------
+    const products = [
+      {nama:'Apple', img:'../assets/item/1.png', harga:10000, stock:true, diskon:false, kategori:'buah'},
+      {nama:'Banana', img:'../assets/item/2.png', harga:8000, stock:true, diskon:false, kategori:'buah'},
+      {nama:'Carrot', img:'../assets/item/3.png', harga:6000, stock:true, diskon:false, kategori:'sayur'},
+      {nama:'Bread', img:'../assets/item/4.png', harga:15000, stock:true, diskon:false, kategori:'makanan'},
+      {nama:'Milk', img:'../assets/item/5.png', harga:25000, stock:true, diskon:true, kategori:'minuman'},
+      {nama:'Cheese', img:'../assets/item/6.png', harga:30000, stock:true, diskon:false, kategori:'makanan'},
+      {nama:'Eggs', img:'../assets/item/7.png', harga:22000, stock:false, diskon:false, kategori:'makanan'},
+      {nama:'Chicken', img:'../assets/item/8.png', harga:38000, stock:true, diskon:true, kategori:'protein'},
+      {nama:'Fish', img:'../assets/item/9.png', harga:42000, stock:true, diskon:false, kategori:'protein'},
+      {nama:'Rice', img:'../assets/item/10.png', harga:50000, stock:true, diskon:false, kategori:'pokok'}
+    ];
+
+    // ---------- Keranjang ----------
+    let cart = [];
+
+    function resetCart(){ cart = []; renderCart(); }
+    function saveCartToLocal(){ localStorage.setItem('supermarket-cart', JSON.stringify(cart)); flashOut('rak', 'Keranjang disimpan.'); }
+    function loadCartFromLocal(){ const data = localStorage.getItem('supermarket-cart'); cart = data ? JSON.parse(data) : []; renderCart(); flashOut('rak','Keranjang dimuat.'); }
+
+    // Render rak
+    const rackEl = document.getElementById('rack');
+    function renderRack(){
+      rackEl.innerHTML = '';
+      products.forEach(p=>{
+        const card = document.createElement('div');
+        card.className = 'it flex flex-col items-center';
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.nama}" />
+          <div class="mt-2 font-semibold">${p.nama}</div>
+          <div class="text-sm text-slate-600">Rp ${p.harga.toLocaleString('id-ID')}</div>
+          <div class="mt-2 flex items-center justify-center gap-2">
+            <button class="px-3 py-1 rounded-lg border text-[color:var(--primary-2)]" onclick="addToCart('${p.nama}')">Tambah</button>
+            <button class="px-3 py-1 rounded-lg border" onclick="removeOne('${p.nama}')">-1</button>
+          </div>`;
+        rackEl.appendChild(card);
+      });
+    }
+
+    function addToCart(nama){
+      const item = products.find(p=>p.nama===nama);
+      if(!item) return;
+      cart.push({ ...item });
+      renderCart();
+    }
+    function removeOne(nama){
+      const idx = cart.findIndex(i=>i.nama===nama);
+      if(idx>-1){ cart.splice(idx,1); renderCart(); }
+    }
+
+    function renderCart(){
+      const cartList = document.getElementById('cartList');
+      const cartEmpty = document.getElementById('cartEmpty');
+      const cartCount = document.getElementById('cartCount');
+      const cartTotal = document.getElementById('cartTotal');
+
+      cartList.innerHTML='';
+      if(cart.length===0){ cartEmpty.style.display='block'; }
+      else { cartEmpty.style.display='none'; }
+
+      // gabung per nama (qty)
+      const grouped = {};
+      cart.forEach(i=>{ grouped[i.nama] = (grouped[i.nama]||0)+1; });
+
+      let total = 0;
+      Object.entries(grouped).forEach(([nama, qty])=>{
+        const prod = products.find(p=>p.nama===nama);
+        const li = document.createElement('li');
+        li.className='flex items-center justify-between py-1';
+        const sub = prod ? prod.harga*qty : 0; total += sub;
+        li.innerHTML = `<span>${nama} × ${qty}</span>
+                        <span class="text-slate-600">Rp ${sub.toLocaleString('id-ID')}</span>`;
+        li.onclick = ()=> removeOne(nama);
+        cartList.appendChild(li);
+      });
+
+      cartCount.textContent = String(cart.length);
+      cartTotal.textContent = 'Rp ' + total.toLocaleString('id-ID');
+    }
+
+    // ---------- Runner (aman) ----------
+    const originals = {}; // simpan kode terakhir per section
+
+    function setCode(id, value){
+      const ta = document.getElementById('code-'+id);
+      ta.value = value; originals[id] = value;
+    }
+
+    function loadExample(section){
+      const select = document.getElementById('example-'+section);
+      const key = select.value;
+      const code = initialExamples[section][key];
+      setCode(section, code);
+      flashOut(section, 'Contoh dimuat. Tekan Jalankan ▶');
+    }
+
+    function resetCode(section){ if(originals[section]!=null){ setCode(section, originals[section]); flashOut(section,'Kode direset.'); } }
+
+    function flashOut(section, msg){
+      const out = document.getElementById('out-'+section) || document.getElementById('cartList');
+      if(!out) return; out.classList.remove('pulse'); out.offsetWidth; out.classList.add('pulse');
+      if(out.id && out.id.startsWith('out-')) out.textContent = msg;
+    }
+
+    function runCode(section){
+      const code = document.getElementById('code-'+section).value;
+      const outEl = document.getElementById('out-'+section);
+
+      const lines = [];
+      const origLog = console.log, origWarn = console.warn, origErr = console.error;
+      console.log = (...args)=>{ lines.push(args.join(' ')); origLog.apply(console,args); };
+      console.warn = (...args)=>{ lines.push('[WARN] '+args.join(' ')); origWarn.apply(console,args); };
+      console.error = (...args)=>{ lines.push('[ERROR] '+args.join(' ')); origErr.apply(console,args); };
+
+      try{
+        const fn = new Function('cart','products', code);
+        const result = fn(cart, products);
+        if(result !== undefined) lines.push(String(result));
+        outEl.innerText = lines.join('\n') || '✔ Kode dijalankan tanpa output (gunakan console.log).';
+      }catch(e){
+        outEl.innerText = '✖ Error: '+ e.name + ' — ' + e.message + (e.stack? '\n'+ e.stack.split('\n')[1] : '');
+      }finally{
+        console.log = origLog; console.warn = origWarn; console.error = origErr;
+        outEl.classList.remove('pulse'); void outEl.offsetWidth; outEl.classList.add('pulse');
+      }
+    }
+
+    // ---------- Contoh Kode ----------
+    const initialExamples = {
+      foreach: {
+        list:
+`// Tampilkan isi keranjang (nama & harga)
+cart.forEach((item, i) => {
+  console.log(i+1 + '.', item.nama, '- Rp', item.harga.toLocaleString('id-ID'));
+});`,
+        total:
+`// Hitung total harga keranjang
+let total = 0;
+cart.forEach(item => total += item.harga);
+console.log('Total: Rp', total.toLocaleString('id-ID'));`,
+        badge:
+`// Render label harga net (diskon 10% jika item.diskon === true)
+cart.forEach(item => {
+  const net = item.diskon ? Math.round(item.harga * 0.9) : item.harga;
+  console.log(item.nama + ' → Rp ' + net.toLocaleString('id-ID'));
+});`
+      },
+      find: {
+        byName:
+`// Cari item bernama 'Apple'
+const it = cart.find(x => x.nama === 'Apple');
+console.log(it || 'Apple tidak ada di keranjang');`,
+        expensive:
+`// Cari item pertama dengan harga > 30000
+const it = cart.find(x => x.harga > 30000);
+console.log(it || 'Tidak ada yang > 30rb');`,
+        outOfStock:
+`// Catatan: keranjang berisi pilihan user. 
+// find out-of-stock hanya contoh jika user memasukkan Eggs (stock:false)
+const it = cart.find(x => x.stock === false);
+console.log(it || 'Semua yang dipilih punya stok');`
+      },
+      some: {
+        hasMilk:
+`// Apakah ada Milk di keranjang?
+const ada = cart.some(x => x.nama === 'Milk');
+console.log('Ada Milk?', ada);`,
+        anyDiscount:
+`// Apakah ada item diskon?
+const adaDiskon = cart.some(x => x.diskon);
+console.log('Ada diskon?', adaDiskon);`
+      },
+      every: {
+        allUnder50k:
+`// Apakah semua harga di bawah 50rb?
+const ok = cart.every(x => x.harga < 50000);
+console.log('Semua < 50rb?', ok);`,
+        allInStock:
+`// Apakah semua item tersedia stoknya?
+const ok = cart.every(x => x.stock === true);
+console.log('Semua in stock?', ok);`
+      },
+      includes: {
+        hasCheese:
+`// Cek apakah ada 'Cheese' (pakai nama saja)
+const names = cart.map(x => x.nama);
+console.log('Ada Cheese?', names.includes('Cheese'));`,
+        rawNames:
+`// includes bekerja untuk array primitif juga
+const arr = ['Apple','Banana','Milk'];
+console.log(arr.includes('Milk')); // true`
+      }
+    };
+
+    // ---------- Tabs ----------
+    const tabsNav = document.getElementById('tabs');
+    const tabButtons = Array.from(tabsNav.querySelectorAll('.tab-btn'));
+
+    tabButtons.forEach(btn=>{
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.tab;
+        document.querySelectorAll('section.tab').forEach(sec=>{
+          sec.hidden = sec.id !== `tab-${target}`;
+        });
+      });
+    });
+
+    // ---------- Init ----------
+    renderRack();
+    renderCart();
+    // siapkan contoh default
+    function initExamples(){
+      const keys = ['foreach','find','some','every','includes'];
+      keys.forEach(k=>{ const first = Object.keys(initialExamples[k])[0]; setCode(k, initialExamples[k][first]); });
+    }
+    initExamples();
+  </script>
+</body>
+</html>
