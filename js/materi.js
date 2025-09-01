@@ -50,6 +50,11 @@ const materi = [
     title: "ForEach, Find, Some, Every, Includes",
     type: "page",
     link: "materi/forEach.html"
+  },
+  {
+    title: "jQuery (alert, interactive box, click counter)",
+    type: "page",
+    link: "materi/jquery.html"
   }
 ];
 
