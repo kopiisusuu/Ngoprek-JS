@@ -5,66 +5,429 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NgoprekJS</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0c0e2a 0%, #1e293b 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+    
+    .animate-gradient {
+      background: linear-gradient(-45deg, #3b82f6, #6366f1, #06b6d4, #10b981);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+      transform-style: preserve-3d;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.5);
+    }
+    
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .typewriter h1 {
+      overflow: hidden;
+      border-right: .15em solid #3b82f6;
+      white-space: nowrap;
+      margin: 0 auto;
+      letter-spacing: .15em;
+      animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #3b82f6 }
+    }
+    
+    .modal-content {
+      animation: modalFadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes modalFadeIn {
+      from { 
+        opacity: 0;
+        transform: scale(0.9) translateY(50px);
+      }
+      to { 
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .btn-hover {
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn-hover:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      z-index: -1;
+      transition: all 0.3s;
+      transform: scale(0, 1);
+      transform-origin: 0 50%;
+    }
+    
+    .btn-hover:hover:after {
+      transform: scale(1, 1);
+    }
+    
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      animation: floatParticle linear infinite;
+    }
+    
+    @keyframes floatParticle {
+      0% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% { 
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    .glow {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    
+    .card-content {
+      transition: transform 0.3s;
+    }
+    
+    .card-hover:hover .card-content {
+      transform: translateY(-5px);
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-b from-blue-950 to-black text-white font-sans min-h-screen flex flex-col">
+<body class="flex flex-col min-h-screen">
+  
+  <!-- Particles Background -->
+  <div class="particles" id="particles"></div>
   
   <!-- Header -->
-  <header class="flex justify-between items-center px-6 py-4 bg-blue-950 shadow-lg">
-    <h1 class="text-2xl font-bold">NgoprekJS</h1>
+  <header class="flex justify-between items-center px-6 py-4 bg-blue-950/80 backdrop-blur-md shadow-lg z-10 relative">
+    <h1 class="text-2xl font-bold flex items-center">
+      <i class="fas fa-code mr-2 text-blue-400"></i> NgoprekJS
+    </h1>
     <div id="auth-buttons" class="space-x-4">
-      <button id="loginBtn" class="bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-500">Login</button>
-      <button id="registerBtn" class="bg-green-600 px-4 py-2 rounded-xl hover:bg-green-500">Register</button>
+      <button id="loginBtn" class="btn-hover bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-500 transition-all duration-300 transform hover:-translate-y-1">
+        <i class="fas fa-sign-in-alt mr-2"></i> Login
+      </button>
+      <button id="registerBtn" class="btn-hover bg-green-600 px-4 py-2 rounded-xl hover:bg-green-500 transition-all duration-300 transform hover:-translate-y-1">
+        <i class="fas fa-user-plus mr-2"></i> Register
+      </button>
     </div>
     <div id="user-profile" class="hidden flex items-center space-x-4">
       <span id="usernameDisplay" class="font-semibold"></span>
-      <button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded-xl hover:bg-red-500">Logout</button>
+      <button id="logoutBtn" class="btn-hover bg-red-600 px-4 py-2 rounded-xl hover:bg-red-500 transition-all duration-300 transform hover:-translate-y-1">
+        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+      </button>
     </div>
   </header>
 
   <!-- Hero -->
-  <section class="text-center py-16 bg-gradient-to-r from-blue-600 to-blue-400 animate-gradient">
-    <h1 class="text-5xl font-extrabold drop-shadow-lg">NgoprekJS</h1>
-    <p class="mt-4 text-lg">Belajar JavaScript sambil ngoprek</p>
-    <a id="mulaiBelajarBtn"
-       href="#"
-       class="mt-6 inline-block bg-white text-blue-600 px-6 py-2 rounded-xl font-semibold shadow-lg transition">
-       Mulai Belajar
-    </a>
+  <section class="text-center py-16 animate-gradient relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/30 z-0"></div>
+    <div class="relative z-10">
+      <div class="typewriter mb-4">
+        <h1 class="text-5xl font-extrabold drop-shadow-lg">NgoprekJS</h1>
+      </div>
+      <p class="mt-4 text-lg max-w-2xl mx-auto">Belajar JavaScript sambil ngoprek dengan cara yang menyenangkan dan interaktif</p>
+      <a id="mulaiBelajarBtn"
+         href="materi.html"
+         class="mt-6 inline-block bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-110 pulse floating">
+         <i class="fas fa-graduation-cap mr-2"></i> Mulai Belajar
+      </a>
+    </div>
   </section>
 
   <!-- Cards Materi -->
-  <section class="max-w-5xl mx-auto py-12 grid md:grid-cols-3 gap-6 px-4 flex-grow">
-    <div class="bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-      <h2 class="text-xl font-bold mb-2">Fundamental</h2>
-      <p class="text-gray-300">Dasar-dasar JavaScript: variabel, function, array.</p>
+  <section class="max-w-5xl mx-auto py-12 grid md:grid-cols-3 gap-6 px-4 flex-grow relative z-10">
+    <div class="card-hover bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-blue-700/30 relative overflow-hidden">
+      <div class="absolute -top-4 -right-4 w-24 h-24 bg-blue-500/10 rounded-full"></div>
+      <div class="card-content">
+        <div class="card-icon">
+          <i class="fas fa-puzzle-piece"></i>
+        </div>
+        <h2 class="text-xl font-bold mb-2">Fundamental</h2>
+        <p class="text-gray-300 mb-4">Dasar-dasar JavaScript: variabel, function, array, dan konsep pemrograman inti.</p>
+        <button class="bg-blue-600/50 hover:bg-blue-600 px-4 py-2 rounded-lg text-sm transition-all btn-hover">
+          Pelajari Sekarang <i class="fas fa-arrow-right ml-1"></i>
+        </button>
+      </div>
     </div>
-    <div class="bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-      <h2 class="text-xl font-bold mb-2">Array Method</h2>
-      <p class="text-gray-300">Belajar .map(), .filter(), .reduce().</p>
+    
+    <div class="card-hover bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-blue-700/30 relative overflow-hidden">
+      <div class="absolute -top-4 -right-4 w-24 h-24 bg-green-500/10 rounded-full"></div>
+      <div class="card-content">
+        <div class="card-icon">
+          <i class="fas fa-cogs"></i>
+        </div>
+        <h2 class="text-xl font-bold mb-2">Array Method</h2>
+        <p class="text-gray-300 mb-4">Belajar .map(), .filter(), .reduce() dan metode array penting lainnya.</p>
+        <button class="bg-green-600/50 hover:bg-green-600 px-4 py-2 rounded-lg text-sm transition-all btn-hover">
+          Pelajari Sekarang <i class="fas fa-arrow-right ml-1"></i>
+        </button>
+      </div>
     </div>
-    <div class="bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-      <h2 class="text-xl font-bold mb-2">Try Catch</h2>
-      <p class="text-gray-300">Try, Catch, Finally,Switch Case, Looping </p>
+    
+    <div class="card-hover bg-blue-900/30 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-blue-700/30 relative overflow-hidden">
+      <div class="absolute -top-4 -right-4 w-24 h-24 bg-purple-500/10 rounded-full"></div>
+      <div class="card-content">
+        <div class="card-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h2 class="text-xl font-bold mb-2">Try Catch</h2>
+        <p class="text-gray-300 mb-4">Try, Catch, Finally, Switch Case, Looping dan penanganan error.</p>
+        <button class="bg-purple-600/50 hover:bg-purple-600 px-4 py-2 rounded-lg text-sm transition-all btn-hover">
+          Pelajari Sekarang <i class="fas fa-arrow-right ml-1"></i>
+        </button>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-blue-950 py-6 text-center text-gray-400">
+  <footer class="bg-blue-950/80 backdrop-blur-md py-6 text-center text-gray-400 mt-auto relative z-10">
     <p>© 2025 NgoprekJS. Dibuat untuk belajar JavaScript interaktif.</p>
+    <div class="flex justify-center space-x-4 mt-2">
+      <a href="#" class="text-blue-400 hover:text-blue-300 transition"><i class="fab fa-github"></i></a>
+      <a href="#" class="text-blue-400 hover:text-blue-300 transition"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="text-blue-400 hover:text-blue-300 transition"><i class="fab fa-discord"></i></a>
+    </div>
   </footer>
 
   <!-- Modal Login/Register -->
   <div id="authModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-    <div class="bg-white text-black rounded-xl p-6 w-96 shadow-lg">
-      <h2 id="authTitle" class="text-2xl font-bold mb-4">Login</h2>
-      <input id="usernameInput" type="text" placeholder="Username" class="w-full mb-3 px-3 py-2 border rounded-lg">
-      <input id="passwordInput" type="password" placeholder="Password" class="w-full mb-3 px-3 py-2 border rounded-lg">
-      <button id="authSubmit" class="bg-blue-600 w-full py-2 rounded-lg text-white font-semibold">Submit</button>
-      <button id="closeModal" class="mt-3 w-full py-2 rounded-lg border">Batal</button>
+    <div class="modal-content bg-gray-900 text-white rounded-xl p-6 w-96 shadow-lg border border-gray-700">
+      <div class="flex justify-between items-center mb-4">
+        <h2 id="authTitle" class="text-2xl font-bold">Login</h2>
+        <button id="closeModal" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <input id="usernameInput" type="text" placeholder="Username" class="w-full mb-3 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <input id="passwordInput" type="password" placeholder="Password" class="w-full mb-3 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button id="authSubmit" class="btn-hover bg-blue-600 w-full py-2 rounded-lg text-white font-semibold transition">
+        <i class="fas fa-paper-plane mr-2"></i> Submit
+      </button>
     </div>
   </div>
 
-  <script src="js/app.js"></script>
+  <script>
+    // Create particles background
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 5 + 2;
+        const posX = Math.random() * 100;
+        const duration = Math.random() * 10 + 10;
+        const delay = Math.random() * 5;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.opacity = Math.random() * 0.5 + 0.1;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // Auth functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      
+      const authModal = document.getElementById('authModal');
+      const authTitle = document.getElementById('authTitle');
+      const authSubmit = document.getElementById('authSubmit');
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const closeModal = document.getElementById('closeModal');
+      const mulaiBelajarBtn = document.getElementById('mulaiBelajarBtn');
+      const authButtons = document.getElementById('auth-buttons');
+      const userProfile = document.getElementById('user-profile');
+      const usernameDisplay = document.getElementById('usernameDisplay');
+      const logoutBtn = document.getElementById('logoutBtn');
+      
+      // Check if user is logged in
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        authButtons.classList.add('hidden');
+        userProfile.classList.remove('hidden');
+        usernameDisplay.textContent = currentUser;
+      }
+      
+      // Login button click
+      loginBtn.addEventListener('click', function() {
+        authTitle.textContent = 'Login';
+        authSubmit.textContent = 'Login';
+        authModal.classList.remove('hidden');
+      });
+      
+      // Register button click
+      registerBtn.addEventListener('click', function() {
+        authTitle.textContent = 'Register';
+        authSubmit.textContent = 'Register';
+        authModal.classList.remove('hidden');
+      });
+      
+      // Close modal
+      closeModal.addEventListener('click', function() {
+        authModal.classList.add('hidden');
+      });
+      
+      // Auth submit
+      authSubmit.addEventListener('click', function() {
+        const username = document.getElementById('usernameInput').value;
+        const password = document.getElementById('passwordInput').value;
+        
+        if (username && password) {
+          if (authTitle.textContent === 'Register') {
+            // Register logic
+            localStorage.setItem('user_' + username, password);
+            alert('Registrasi berhasil! Silakan login.');
+          } else {
+            // Login logic
+            const storedPassword = localStorage.getItem('user_' + username);
+            if (storedPassword === password) {
+              localStorage.setItem('currentUser', username);
+              authButtons.classList.add('hidden');
+              userProfile.classList.remove('hidden');
+              usernameDisplay.textContent = username;
+              authModal.classList.add('hidden');
+              
+              // Add celebration effect
+              mulaiBelajarBtn.classList.add('glow');
+              setTimeout(() => {
+                mulaiBelajarBtn.classList.remove('glow');
+              }, 3000);
+            } else {
+              alert('Username atau password salah!');
+            }
+          }
+        } else {
+          alert('Harap isi username dan password!');
+        }
+      });
+      
+      // Logout
+      logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('currentUser');
+        authButtons.classList.remove('hidden');
+        userProfile.classList.add('hidden');
+      });
+      
+      // Mulai Belajar button
+      mulaiBelajarBtn.addEventListener('click', function(e) {
+        if (!localStorage.getItem('currentUser')) {
+          e.preventDefault();
+          authModal.classList.remove('hidden');
+          authTitle.textContent = 'Login';
+          authSubmit.textContent = 'Login';
+          alert('Silakan login terlebih dahulu untuk mulai belajar!');
+        }
+      });
+      
+      // Card buttons
+      const cardButtons = document.querySelectorAll('.card-content button');
+      cardButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          if (!localStorage.getItem('currentUser')) {
+            authModal.classList.remove('hidden');
+            authTitle.textContent = 'Login';
+            authSubmit.textContent = 'Login';
+            alert('Silakan login terlebih dahulu untuk mengakses materi!');
+          } else {
+            // Add animation to button
+            this.classList.add('bg-blue-600');
+            setTimeout(() => {
+              alert('Materi akan segera dibuka!');
+            }, 500);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
