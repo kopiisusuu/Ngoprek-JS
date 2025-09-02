@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materi JS Interaktif – Spread, Rest, Destructuring</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --secondary: #f97316;
+      --accent: #10b981;
+      --dark: #1f2937;
+      --light: #f9fafb;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .header {
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .tab-btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--dark);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .tab-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tab-btn.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+      border-color: var(--primary);
+    }
+    
+    .mission-box {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-top: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+    
+    .mission-box:hover {
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    textarea.code {
+      width: 100%;
+      min-height: 200px;
+      border-radius: 16px;
+      border: 2px solid #e5e7eb;
+      background: #f8fafc;
+      font-family: 'Fira Code', 'Monaco', 'Cascadia Code', monospace;
+      padding: 16px;
+      margin-bottom: 16px;
+      resize: vertical;
+      transition: all 0.3s;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+    
+    textarea.code:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+    
+    .out {
+      background: var(--dark);
+      color: #f3f4f6;
+      padding: 16px;
+      border-radius: 16px;
+      min-height: 100px;
+      white-space: pre-wrap;
+      margin-top: 16px;
+      font-family: 'Fira Code', monospace;
+      overflow: auto;
+      position: relative;
+    }
+    
+    .out::before {
+      content: "Output:";
+      display: block;
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    
+    .btn-run {
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+    }
+    
+    .btn-run:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+    }
+    
+    .btn-reset {
+      background: #f3f4f6;
+      color: #4b5563;
+      border: 1px solid #e5e7eb;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-reset:hover {
+      background: #e5e7eb;
+    }
+    
+    .pulse {
+      animation: pulse 0.8s ease;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+      50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.1); }
+      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    }
+    
+    .flex-gap {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .code-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-icon {
+      padding: 8px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-icon:hover {
+      background: #e2e8f0;
+      color: #475569;
+    }
+    
+    .progress-bar {
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    
+    .hint-box {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .hint-icon {
+      color: #f59e0b;
+      font-size: 16px;
+    }
+    
+    .challenge-badge {
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+    
+    @media (max-width: 768px) {
+      .tab-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+      
+      .mission-box {
+        padding: 16px;
+      }
+      
+      .btn-run, .btn-reset {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold header mb-2">Materi JS Interaktif</h1>
+    <p class="mb-6 text-gray-600 text-lg">Pelajari Spread Operator, Rest Operator, dan Destructuring dengan eksperimen langsung!</p>
+
+    <!-- Tabs -->
+    <div class="flex gap-3 mb-6 flex-wrap" id="tabs">
+      <button class="tab-btn active" data-target="#spread">
+        <i class="fas fa-expand-alt"></i> Spread Operator
+      </button>
+      <button class="tab-btn" data-target="#rest">
+        <i class="fas fa-ellipsis-h"></i> Rest Operator
+      </button>
+      <button class="tab-btn" data-target="#destructuring">
+        <i class="fas fa-project-diagram"></i> Destructuring
+      </button>
+    </div>
+
+    <!-- Spread Operator -->
+    <div id="spread" class="mission-box">
+      <h2 class="text-xl font-semibold text-purple-700 mb-3 flex items-center">
+        <i class="fas fa-expand-alt mr-2"></i> Spread Operator
+        <span class="challenge-badge">Pemula</span>
+      </h2>
+      <p class="mb-4 text-gray-700">🎯 <strong>Tujuan:</strong> Menggabungkan array atau object dengan mudah menggunakan sintaks <code class="bg-purple-100 text-purple-800 px-1 rounded">...</code></p>
+      
+      <div class="code-header">
+        <h3 class="font-medium text-gray-700">Editor Kode:</h3>
+        <div class="code-actions">
+          <button class="btn-icon" title="Format Kode" onclick="formatCode('codeSpread')">
+            <i class="fas fa-indent"></i>
+          </button>
+          <button class="btn-icon" title="Salin Kode" onclick="copyCode('codeSpread')">
+            <i class="far fa-copy"></i>
+          </button>
+        </div>
+      </div>
+      
+      <textarea id="codeSpread" class="code" spellcheck="false">
+// Contoh: gabung array
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+const gabung = [...arr1, ...arr2];
+console.log("Array gabung:", gabung);
+
+// Contoh: copy object
+const obj1 = {a: 1, b: 2};
+const obj2 = {...obj1, c: 3};
+console.log("Objek gabung:", obj2);
+
+// Coba juga: tambahkan elemen di tengah
+const arr3 = [0, ...arr1, 4, ...arr2, 7];
+console.log("Array extended:", arr3);</textarea>
+      
+      <div class="flex-gap">
+        <button id="runSpread" class="btn-run">
+          <i class="fas fa-play"></i> Jalankan Kode
+        </button>
+        <button id="resetSpread" class="btn-reset">
+          <i class="fas fa-redo"></i> Reset
+        </button>
+      </div>
+      
+      <div class="progress-bar">
+        <div id="progressSpread" class="progress-fill"></div>
+      </div>
+      
+      <div id="outSpread" class="out"></div>
+      
+      <div class="hint-box">
+        <i class="fas fa-lightbulb hint-icon"></i>
+        <div>
+          <strong>Tip:</strong> Spread operator juga bisa digunakan untuk mengubah NodeList menjadi Array: 
+          <code class="bg-gray-100 px-1 rounded">const elements = [...document.querySelectorAll('div')];</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rest Operator -->
+    <div id="rest" class="mission-box hidden">
+      <h2 class="text-xl font-semibold text-yellow-700 mb-3 flex items-center">
+        <i class="fas fa-ellipsis-h mr-2"></i> Rest Operator
+        <span class="challenge-badge" style="background: var(--secondary);">Menengah</span>
+      </h2>
+      <p class="mb-4 text-gray-700">🎯 <strong>Tujuan:</strong> Menampung sisa elemen menjadi array menggunakan sintaks <code class="bg-yellow-100 text-yellow-800 px-1 rounded">...</code></p>
+      
+      <div class="code-header">
+        <h3 class="font-medium text-gray-700">Editor Kode:</h3>
+        <div class="code-actions">
+          <button class="btn-icon" title="Format Kode" onclick="formatCode('codeRest')">
+            <i class="fas fa-indent"></i>
+          </button>
+          <button class="btn-icon" title="Salin Kode" onclick="copyCode('codeRest')">
+            <i class="far fa-copy"></i>
+          </button>
+        </div>
+      </div>
+      
+      <textarea id="codeRest" class="code" spellcheck="false">
+// Contoh: function dengan rest parameter
+function sumAll(...nums) {
+  return nums.reduce((a, b) => a + b, 0);
+}
+console.log("Jumlah total:", sumAll(1, 2, 3, 4, 5));
+
+// Contoh: array destructuring dengan rest
+const [first, second, ...restArr] = [10, 20, 30, 40, 50];
+console.log("First:", first, "Second:", second, "Rest:", restArr);
+
+// Contoh: object destructuring dengan rest
+const person = {name: "Budi", age: 20, city: "Jakarta", occupation: "Developer"};
+const {name, age, ...details} = person;
+console.log("Name:", name, "Age:", age, "Details:", details);</textarea>
+      
+      <div class="flex-gap">
+        <button id="runRest" class="btn-run" style="background: linear-gradient(to right, var(--secondary), #fb923c);">
+          <i class="fas fa-play"></i> Jalankan Kode
+        </button>
+        <button id="resetRest" class="btn-reset">
+          <i class="fas fa-redo"></i> Reset
+        </button>
+      </div>
+      
+      <div class="progress-bar">
+        <div id="progressRest" class="progress-fill"></div>
+      </div>
+      
+      <div id="outRest" class="out"></div>
+      
+      <div class="hint-box" style="background: #dcfce7; border-left-color: var(--accent);">
+        <i class="fas fa-info-circle hint-icon" style="color: var(--accent);"></i>
+        <div>
+          <strong>Fakta:</strong> Rest parameter harus selalu menjadi parameter terakhir dalam fungsi, dan dalam destructuring harus menjadi elemen terakhir.
+        </div>
+      </div>
+    </div>
+
+    <!-- Destructuring -->
+    <div id="destructuring" class="mission-box hidden">
+      <h2 class="text-xl font-semibold text-green-700 mb-3 flex items-center">
+        <i class="fas fa-project-diagram mr-2"></i> Destructuring
+        <span class="challenge-badge" style="background: var(--accent);">Lanjutan</span>
+      </h2>
+      <p class="mb-4 text-gray-700">🎯 <strong>Tujuan:</strong> Ambil nilai array atau object dengan mudah menggunakan sintaks destructuring</p>
+      
+      <div class="code-header">
+        <h3 class="font-medium text-gray-700">Editor Kode:</h3>
+        <div class="code-actions">
+          <button class="btn-icon" title="Format Kode" onclick="formatCode('codeDestruct')">
+            <i class="fas fa-indent"></i>
+          </button>
+          <button class="btn-icon" title="Salin Kode" onclick="copyCode('codeDestruct')">
+            <i class="far fa-copy"></i>
+          </button>
+        </div>
+      </div>
+      
+      <textarea id="codeDestruct" class="code" spellcheck="false">
+// Destructuring array
+const numbers = [1, 2, 3, 4, 5];
+const [a, b, , d] = numbers; // Melewatkan elemen ketiga
+console.log("a:", a, "b:", b, "d:", d);
+
+// Destructuring object
+const person = {name: "Budi", age: 20, city: "Jakarta"};
+const {name, age, city} = person;
+console.log("Nama:", name, "Umur:", age, "Kota:", city);
+
+// Destructuring dengan nama variabel berbeda
+const {name: namaLengkap, age: umur} = person;
+console.log("Nama Lengkap:", namaLengkap, "Umur:", umur);
+
+// Destructuring dalam parameter fungsi
+function printPerson({name, age}) {
+  console.log(`${name} berumur ${age} tahun`);
+}
+printPerson(person);</textarea>
+      
+      <div class="flex-gap">
+        <button id="runDestruct" class="btn-run" style="background: linear-gradient(to right, var(--accent), #34d399);">
+          <i class="fas fa-play"></i> Jalankan Kode
+        </button>
+        <button id="resetDestruct" class="btn-reset">
+          <i class="fas fa-redo"></i> Reset
+        </button>
+      </div>
+      
+      <div class="progress-bar">
+        <div id="progressDestruct" class="progress-fill"></div>
+      </div>
+      
+      <div id="outDestruct" class="out"></div>
+      
+      <div class="hint-box">
+        <i class="fas fa-bolt hint-icon"></i>
+        <div>
+          <strong>Percobaan:</strong> Coba destructuring nested object: 
+          <code class="bg-gray-100 px-1 rounded">const {address: {city}} = {name: "A", address: {city: "Jakarta"}};</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // ---------- Tabs ----------
+    $("#tabs .tab-btn").click(function(){
+      $("#tabs .tab-btn").removeClass("active");
+      $(this).addClass("active");
+      $(".mission-box").addClass("hidden");
+      $($(this).data("target")).removeClass("hidden");
+    });
+
+    // ---------- Default codes ----------
+    const defaultSpread = $("#codeSpread").val();
+    const defaultRest = $("#codeRest").val();
+    const defaultDestruct = $("#codeDestruct").val();
+
+    $("#resetSpread").click(() => {
+      $("#codeSpread").val(defaultSpread);
+      $("#outSpread").text("");
+      $("#progressSpread").css("width", "0%");
+    });
+    
+    $("#resetRest").click(() => {
+      $("#codeRest").val(defaultRest);
+      $("#outRest").text("");
+      $("#progressRest").css("width", "0%");
+    });
+    
+    $("#resetDestruct").click(() => {
+      $("#codeDestruct").val(defaultDestruct);
+      $("#outDestruct").text("");
+      $("#progressDestruct").css("width", "0%");
+    });
+
+    // ---------- Run code safely ----------
+    function runCode(id){
+      const code = $("#" + id).val();
+      const outEl = $("#out" + id.replace("code",""));
+      const progressEl = $("#progress" + id.replace("code",""));
+      const logs = [];
+      const origLog = console.log;
+      
+      // Animate progress bar
+      progressEl.css("width", "30%");
+      
+      console.log = (...args) => { 
+        logs.push(args.join(' ')); 
+        origLog.apply(console, args); 
+      };
+      
+      try {
+        new Function(code)();
+        outEl.text(logs.join("\n") || "✔ Kode dijalankan tanpa output (gunakan console.log)");
+        progressEl.css("width", "100%");
+        setTimeout(() => progressEl.css("width", "0%"), 1000);
+      } catch(e) {
+        outEl.text("✖ Error: " + e.message);
+        progressEl.css("width", "0%");
+      } finally {
+        console.log = origLog;
+        outEl.removeClass("pulse"); 
+        void outEl.offsetWidth; 
+        outEl.addClass("pulse");
+      }
+    }
+
+    $("#runSpread").click(() => runCode("codeSpread"));
+    $("#runRest").click(() => runCode("codeRest"));
+    $("#runDestruct").click(() => runCode("codeDestruct"));
+
+    // ---------- Additional utility functions ----------
+    function formatCode(id) {
+      const textarea = $("#" + id);
+      let code = textarea.val();
+      
+      // Simple formatting (in a real app, use a proper formatter like Prettier)
+      code = code
+        .replace(/([{[,])\s*/g, '$1 ')  // Add space after { [ , 
+        .replace(/\s*([}\]])/g, ' $1')  // Add space before } ]
+        .replace(/;\s*/g, ';\n')        // New line after ;
+        .replace(/{/g, ' {\n')          // New line after {
+        .replace(/}/g, '\n}')           // New line before }
+        .replace(/\n\s*\n/g, '\n');     // Remove empty lines
+      
+      textarea.val(code);
+    }
+    
+    function copyCode(id) {
+      const textarea = $("#" + id);
+      textarea.select();
+      document.execCommand('copy');
+      
+      // Show feedback
+      const btn = $(`button[onclick="copyCode('${id}')"]`);
+      btn.html('<i class="fas fa-check"></i>');
+      setTimeout(() => btn.html('<i class="far fa-copy"></i>'), 2000);
+    }
+    
+    // Add syntax highlighting on focus
+    $(".code").focus(function() {
+      $(this).css("background", "#ffffff");
+    }).blur(function() {
+      $(this).css("background", "#f8fafc");
+    });
+  </script>
+</body>
+</html>

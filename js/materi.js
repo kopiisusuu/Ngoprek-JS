@@ -15,6 +15,16 @@ const materi = [
     link: "materi/forEach.html"
   },
   {
+    title: "try catch, switch,Casey, looping",
+    type: "page",
+    link: "materi/looping.html"
+  },
+  {
+    title: "spread, rest operator, destructuring",
+    type: "page",
+    link: "materi/spread.html"
+  },
+  {
     title: "jQuery (alert, interactive box, click counter)",
     type: "page",
     link: "materi/jquery.html"
