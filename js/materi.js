@@ -25,6 +25,11 @@ const materi = [
     link: "materi/spread.html"
   },
   {
+    title: "Modern (ES6+)",
+    type: "page",
+    link: "materi/es6.html"
+  },
+  {
     title: "jQuery (alert, interactive box, click counter)",
     type: "page",
     link: "materi/jquery.html"
