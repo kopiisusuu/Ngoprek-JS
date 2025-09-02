@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Playground - Function, Method, Array</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #111827;
+    }
+    header {
+      background: #1e3a8a;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background: #111827;
+    }
+    .tab {
+      padding: 1rem 2rem;
+      cursor: pointer;
+      color: #d1d5db;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .tab.active {
+      background: #2563eb;
+      color: white;
+      border-radius: 5px 5px 0 0;
+    }
+    .content {
+      display: none;
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 1.5rem;
+    }
+    .content.active {
+      display: block;
+    }
+    .desc {
+      background: #eff6ff;
+      padding: 1rem;
+      border-left: 5px solid #2563eb;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      color: #1e40af;
+    }
+    textarea {
+      width: 100%;
+      height: 160px;
+      font-family: monospace;
+      border: 1px solid #ccc;
+      padding: 0.8rem;
+      border-radius: 5px;
+      background: #f9fafb;
+      resize: vertical;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    .output {
+      background: #f3f4f6;
+      border: 1px solid #ccc;
+      padding: 0.8rem;
+      height: 140px;
+      overflow-y: auto;
+      border-radius: 6px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JS Playground: Function, Method & Array</h1>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="openTab('function')">Function</div>
+    <div class="tab" onclick="openTab('method')">Method</div>
+    <div class="tab" onclick="openTab('array')">Array</div>
+  </div>
+
+  <!-- Function -->
+  <div id="function" class="content active">
+    <div class="desc"><strong>Function</strong> adalah blok kode yang dapat dipanggil berkali-kali untuk menjalankan tugas tertentu.</div>
+    <textarea id="functionCode"></textarea>
+    <div class="buttons">
+      <button onclick="loadExample('function')">Muat Contoh</button>
+      <button onclick="runCode('function')">Jalankan</button>
+      <button onclick="resetCode('function')">Reset</button>
+    </div>
+    <div id="functionOutput" class="output"></div>
+  </div>
+
+  <!-- Method -->
+  <div id="method" class="content">
+    <div class="desc"><strong>Method</strong> adalah fungsi yang dimiliki oleh suatu objek, misalnya string atau array, untuk melakukan operasi tertentu.</div>
+    <textarea id="methodCode"></textarea>
+    <div class="buttons">
+      <button onclick="loadExample('method')">Muat Contoh</button>
+      <button onclick="runCode('method')">Jalankan</button>
+      <button onclick="resetCode('method')">Reset</button>
+    </div>
+    <div id="methodOutput" class="output"></div>
+  </div>
+
+  <!-- Array -->
+  <div id="array" class="content">
+    <div class="desc"><strong>Array</strong> adalah struktur data yang menyimpan banyak nilai dalam satu variabel.</div>
+    <textarea id="arrayCode"></textarea>
+    <div class="buttons">
+      <button onclick="loadExample('array')">Muat Contoh</button>
+      <button onclick="runCode('array')">Jalankan</button>
+      <button onclick="resetCode('array')">Reset</button>
+    </div>
+    <div id="arrayOutput" class="output"></div>
+  </div>
+
+  <script>
+    const examples = {
+      function: `// Contoh Function
+function sapa(nama) {
+  return "Halo " + nama + "!";
+}
+console.log(sapa("Shasa"));
+console.log(sapa("Haikal"));`,
+
+      method: `// Contoh Method
+let teks = "belajar javascript seru";
+console.log(teks.toUpperCase());   // jadi huruf besar semua
+console.log(teks.includes("seru")); // cek apakah ada kata "seru"
+
+let angka = [1, 2, 3];
+angka.push(4); // tambah elemen ke array
+console.log(angka);`,
+
+      array: `// Contoh Array
+let buah = ["apel", "mangga", "pisang"];
+console.log(buah);
+
+// akses elemen array
+console.log("Buah pertama:", buah[0]);
+
+// looping array
+buah.forEach((item, i) => {
+  console.log(i + ":", item);
+});`
+    };
+
+    function openTab(tab) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".content").forEach(c => c.classList.remove("active"));
+      document.querySelector(`.tab[onclick="openTab('${tab}')"]`).classList.add("active");
+      document.getElementById(tab).classList.add("active");
+    }
+
+    function loadExample(type) {
+      document.getElementById(type + "Code").value = examples[type];
+    }
+
+    function runCode(type) {
+      const code = document.getElementById(type + "Code").value;
+      const outputEl = document.getElementById(type + "Output");
+      outputEl.textContent = "";
+      try {
+        const log = [];
+        const originalLog = console.log;
+        console.log = (...args) => {
+          log.push(args.join(" "));
+        };
+        eval(code);
+        console.log = originalLog;
+        outputEl.textContent = log.join("\\n");
+      } catch (err) {
+        outputEl.textContent = "Error: " + err.message;
+      }
+    }
+
+    function resetCode(type) {
+      document.getElementById(type + "Code").value = "";
+      document.getElementById(type + "Output").textContent = "";
+    }
+  </script>
+</body>
+</html>

@@ -18,6 +18,11 @@ const materi = [
     title: "jQuery (alert, interactive box, click counter)",
     type: "page",
     link: "materi/jquery.html"
+  },
+  {
+    title: "Function",
+    type: "page",
+    link: "materi/function.html"
   }
 ];
 
