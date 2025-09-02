@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supermarket jQuery AJAX Missions (Mudah Dipahami)</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+    textarea.code{
+      width:100%; min-height:150px; resize:vertical; font-family: monospace; 
+      background:#1e293b; color:#f1f5f9; border-radius:12px; padding:10px;
+      border:1px solid #334155;
+    }
+    .out{background:#0f172a; color:#e5e7eb; padding:10px; border-radius:12px; min-height:80px; white-space:pre-wrap;}
+    .pulse{animation:pulse .8s ease}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}50%{box-shadow:0 0 0 6px rgba(37,99,235,.15)}100%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}}
+    .step{background:#e0f2fe; padding:8px 12px; border-left:4px solid #3b82f6; margin-bottom:6px; border-radius:6px;}
+  </style>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-white min-h-screen p-6 flex justify-center">
+
+<div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-6 space-y-6">
+
+  <!-- Header & Intro -->
+  <div>
+    <h1><a href="../materi.html">❌</a></h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">Supermarket jQuery AJAX Missions</h1>
+    <p class="text-gray-700 mb-4">
+      Belajar <strong>jQuery AJAX</strong> interaktif: fetch data, render API, submit form.<br>
+      Tiap misi punya alur jelas: tujuan → langkah → kode → hasil. Bisa langsung dicoba dan diubah.
+    </p>
+    <details class="mb-4">
+      <summary class="cursor-pointer font-semibold text-blue-600">Apa itu jQuery AJAX?</summary>
+      <p class="mt-2 text-gray-700">
+        AJAX (Asynchronous JavaScript and XML) memungkinkan web mengambil atau mengirim data ke server tanpa reload halaman. 
+        Dengan jQuery, kita bisa pakai <code>$.ajax()</code>, <code>$.get()</code>, atau <code>$.post()</code> dengan lebih mudah.
+      </p>
+    </details>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-2 flex-wrap mb-4">
+    <button class="tab-btn px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-medium shadow-sm" data-target="#mission1">Mission 1 · Ambil Data JSON</button>
+    <button class="tab-btn px-4 py-2 rounded-full bg-gray-100 text-gray-600 font-medium shadow-sm" data-target="#mission2">Mission 2 · Render API</button>
+    <button class="tab-btn px-4 py-2 rounded-full bg-gray-100 text-gray-600 font-medium shadow-sm" data-target="#mission3">Mission 3 · Submit Form</button>
+  </div>
+
+  <!-- Mission 1: Get JSON -->
+  <div id="mission1" class="mission-box bg-blue-50 rounded-xl p-4 shadow-inner">
+    <h2 class="text-lg font-semibold text-blue-700 mb-2">Mission 1: Ambil Data JSON</h2>
+    <div class="step">🎯 Tujuan: Ambil data JSON dari server dan tampilkan di console & panel output.</div>
+    <div class="step">1️⃣ Klik tombol <strong>Ambil Data</strong> atau ubah kode di textarea.</div>
+    <div class="step">2️⃣ Jalankan kode dengan tombol <strong>Jalankan ▶</strong>.</div>
+    <div class="step">3️⃣ Lihat hasil di panel output di bawah.</div>
+    <textarea id="code1" class="code">
+// Contoh: ambil data JSON dari API placeholder
+$("#getBtn").click(function(){
+  $.get("https://jsonplaceholder.typicode.com/todos/1", function(data){
+    console.log(data);
+    $("#out1").text(JSON.stringify(data, null, 2));
+  });
+});
+    </textarea>
+    <div class="mt-2 flex gap-2">
+      <button id="run1" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600">Jalankan ▶</button>
+      <button id="reset1" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400">Reset ↺</button>
+    </div>
+    <div class="mt-2 out" id="out1"></div>
+    <button id="getBtn" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">Ambil Data</button>
+  </div>
+
+  <!-- Mission 2: Render API -->
+  <div id="mission2" class="mission-box hidden bg-blue-50 rounded-xl p-4 shadow-inner">
+    <h2 class="text-lg font-semibold text-blue-700 mb-2">Mission 2: Render API ke Kotak</h2>
+    <div class="step">🎯 Tujuan: Ambil data list user dari server dan tampilkan ke kotak di halaman.</div>
+    <div class="step">1️⃣ Klik tombol <strong>Render Users</strong> atau ubah kode di textarea.</div>
+    <div class="step">2️⃣ Jalankan kode dengan tombol <strong>Jalankan ▶</strong>.</div>
+    <div class="step">3️⃣ Lihat hasil di kotak biru di bawah.</div>
+    <textarea id="code2" class="code">
+// Contoh: render data users ke kotak
+$("#renderBtn").click(function(){
+  $.get("https://jsonplaceholder.typicode.com/users", function(users){
+    let html = "";
+    users.forEach(u=>{
+      html += `<div class="p-2 mb-1 bg-white shadow rounded">${u.name} (${u.email})</div>`;
+    });
+    $("#dataBox").html(html);
+  });
+});
+    </textarea>
+    <div class="mt-2 flex gap-2">
+      <button id="run2" class="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600">Jalankan ▶</button>
+      <button id="reset2" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400">Reset ↺</button>
+    </div>
+    <div class="mt-2 out" id="out2"></div>
+    <div id="dataBox" class="mt-2 p-2 bg-blue-100 rounded-lg min-h-[80px]"></div>
+    <button id="renderBtn" class="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">Render Users</button>
+  </div>
+
+  <!-- Mission 3: Submit Form -->
+  <div id="mission3" class="mission-box hidden bg-blue-50 rounded-xl p-4 shadow-inner">
+    <h2 class="text-lg font-semibold text-blue-700 mb-2">Mission 3: Submit Form via AJAX</h2>
+    <div class="step">🎯 Tujuan: Kirim data form ke server dummy dan lihat response.</div>
+    <div class="step">1️⃣ Isi nama di input.</div>
+    <div class="step">2️⃣ Klik tombol <strong>Submit</strong> atau ubah kode di textarea.</div>
+    <div class="step">3️⃣ Jalankan kode dengan tombol <strong>Jalankan ▶</strong>.</div>
+    <div class="step">4️⃣ Lihat response di panel output.</div>
+    <textarea id="code3" class="code">
+// Contoh: kirim data form ke server dummy
+$("#formBtn").click(function(){
+  const name = $("#name").val();
+  $.post("https://jsonplaceholder.typicode.com/posts", {name}, function(data){
+    console.log(data);
+    $("#out3").text(JSON.stringify(data, null, 2));
+  });
+});
+    </textarea>
+    <div class="mt-2 flex gap-2">
+      <button id="run3" class="px-4 py-2 bg-purple-500 text-white rounded-lg shadow hover:bg-purple-600">Jalankan ▶</button>
+      <button id="reset3" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400">Reset ↺</button>
+    </div>
+    <div class="mt-2 out" id="out3"></div>
+    <input type="text" id="name" placeholder="Nama kamu" class="mt-2 px-3 py-2 rounded-lg border w-full mb-2">
+    <button id="formBtn" class="px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700">Submit</button>
+  </div>
+
+</div>
+
+<script>
+  // Tab switching
+  $(".tab-btn").click(function () {
+    $(".tab-btn").removeClass("bg-blue-100 text-blue-600").addClass("bg-gray-100 text-gray-600");
+    $(this).removeClass("bg-gray-100 text-gray-600").addClass("bg-blue-100 text-blue-600");
+    $(".mission-box").addClass("hidden");
+    $($(this).data("target")).removeClass("hidden");
+  });
+
+  // ---------- Reset bawaan ----------
+  const defaultCode = {
+    code1: $("#code1").val(),
+    code2: $("#code2").val(),
+    code3: $("#code3").val()
+  };
+  $("#reset1").click(()=>$("#code1").val(defaultCode.code1));
+  $("#reset2").click(()=>$("#code2").val(defaultCode.code2));
+  $("#reset3").click(()=>$("#code3").val(defaultCode.code3));
+
+  // ---------- Jalankan kode dari textarea ----------
+  function runCode(id, extraVars={}){
+    const code = $("#" + id).val();
+    const outEl = $("#out"+id.charAt(id.length-1));
+    const logs = [];
+    const origLog = console.log;
+    console.log = (...args)=>{ logs.push(args.join(' ')); origLog.apply(console,args); };
+    try{
+      const fn = new Function("$", "jQuery", ...Object.keys(extraVars), code);
+      fn($, jQuery, ...Object.values(extraVars));
+      outEl.text(logs.join("\n") || "✔ Kode dijalankan tanpa output (gunakan console.log)");
+    }catch(e){
+      outEl.text("✖ Error: " + e.message);
+    }finally{
+      console.log = origLog;
+      outEl.removeClass("pulse"); void outEl.offsetWidth; outEl.addClass("pulse");
+    }
+  }
+
+  $("#run1").click(()=>runCode("code1"));
+  $("#run2").click(()=>runCode("code2"));
+  $("#run3").click(()=>runCode("code3"));
+</script>
+</body>
+</html>

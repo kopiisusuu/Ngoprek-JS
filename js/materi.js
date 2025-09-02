@@ -23,6 +23,11 @@ const materi = [
     title: "Function",
     type: "page",
     link: "materi/function.html"
+  },
+  {
+    title: "Ajax",
+    type: "page",
+    link: "materi/ajax.html"
   }
 ];
 
