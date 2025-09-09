@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Belajar Function, Method, dan Array</title>
+    <title>Fundamental JavaScript</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -43,41 +44,6 @@
             color: #a0aec0;
             max-width: 600px;
             margin: 0 auto;
-        }
-        
-        .navigation {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .nav-btn {
-            background: rgba(45, 55, 72, 0.7);
-            color: #e2e8f0;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-        
-        .nav-btn:hover {
-            background: rgba(79, 70, 229, 0.8);
-            transform: translateY(-2px);
-        }
-        
-        .nav-btn.active {
-            background: #4f46e5;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
-        }
-        
-        .nav-btn i {
-            margin-right: 8px;
         }
         
         .content-section {
@@ -200,6 +166,12 @@
             margin-right: 6px;
         }
         
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
         footer {
             text-align: center;
             padding: 20px;
@@ -213,13 +185,13 @@
                 font-size: 2.2rem;
             }
             
-            .navigation {
+            .nav-buttons {
                 flex-direction: column;
+                gap: 10px;
             }
             
-            .nav-btn {
+            .nav-buttons button {
                 width: 100%;
-                justify-content: center;
             }
         }
     </style>
@@ -227,157 +199,226 @@
 <body>
     <div class="container">
         <header>
-            <h1>Materi Pembelajaran JavaScript</h1>
-            <p class="subtitle">Pelajari Function, Method, dan Array melalui contoh interaktif</p>
+            <h1>Fundamental JavaScript</h1>
+            <p class="subtitle">Pelajari konsep-konsep dasar pemrograman JavaScript dengan contoh interaktif</p>
         </header>
         
-        <div class="navigation">
-            <button class="nav-btn active" onclick="showSection('function')">
-                <i class="fas fa-cube"></i> Function
-            </button>
-            <button class="nav-btn" onclick="showSection('method')">
-                <i class="fas fa-cogs"></i> Method
-            </button>
-            <button class="nav-btn" onclick="showSection('array')">
-                <i class="fas fa-layer-group"></i> Array
-            </button>
-        </div>
-        
-        <div id="function" class="content-section">
-            <h2><i class="fas fa-cube"></i> Function (Fungsi)</h2>
-            <p>Function adalah blok kode yang dirancang untuk melakukan tugas tertentu. Function dapat dipanggil kapan saja dan membantu dalam mengorganisir kode menjadi bagian-bagian yang dapat digunakan kembali.</p>
+        <div class="content-section">
+            <h2><i class="fas fa-code"></i> Fundamental JavaScript</h2>
+            <p>JavaScript adalah bahasa pemrograman yang digunakan untuk membuat halaman web interaktif. Mari pelajari fundamentalnya.</p>
             
-            <h3>Jenis-jenis Function</h3>
+            <h3><i class="fas fa-variable"></i> Variabel</h3>
+            <p>Variabel digunakan untuk menyimpan data. Terdapat tiga cara mendeklarasikan variabel:</p>
             <ul>
-                <li><strong>Function Declaration</strong> - Fungsi yang dideklarasikan dengan kata kunci function</li>
-                <li><strong>Function Expression</strong> - Fungsi yang disimpan dalam variabel</li>
-                <li><strong>Arrow Function</strong> - Sintaks fungsi yang lebih ringkas (diperkenalkan di ES6)</li>
+                <li><strong>let</strong> - Variabel yang dapat diubah nilainya</li>
+                <li><strong>const</strong> - Variabel dengan nilai tetap (tidak dapat diubah)</li>
+                <li><strong>var</strong> - Cara lama mendeklarasikan variabel (sebaiknya hindari)</li>
             </ul>
             
-            <h3>Contoh Function</h3>
             <div class="code-block">
                 <code>
-                    <span class="code-comment">// Function Declaration</span><br>
-                    <span class="code-keyword">function</span> sapa(nama) {<br>
-                    &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-string">"Halo, "</span> + nama + <span class="code-string">"!"</span>;<br>
-                    }<br><br>
+                    <span class="code-comment">// Deklarasi variabel</span><br>
+                    <span class="code-keyword">let</span> nama = <span class="code-string">"Budi"</span>;<br>
+                    <span class="code-keyword">const</span> umur = <span class="code-number">20</span>;<br>
+                    <span class="code-keyword">var</span> alamat = <span class="code-string">"Jakarta"</span>;<br><br>
                     
-                    <span class="code-comment">// Function Expression</span><br>
-                    <span class="code-keyword">const</span> tambah = <span class="code-keyword">function</span>(a, b) {<br>
-                    &nbsp;&nbsp;<span class="code-keyword">return</span> a + b;<br>
-                    };<br><br>
+                    <span class="code-comment">// Mengubah nilai variabel let</span><br>
+                    nama = <span class="code-string">"Andi"</span>;<br><br>
                     
-                    <span class="code-comment">// Arrow Function</span><br>
-                    <span class="code-keyword">const</span> kali = (a, b) => a * b;<br><br>
-                    
-                    <span class="code-comment">// Memanggil fungsi</span><br>
-                    <span class="code-keyword">const</span> hasilSapa = sapa(<span class="code-string">"Budi"</span>);<br>
-                    <span class="code-keyword">const</span> hasilTambah = tambah(<span class="code-number">5</span>, <span class="code-number">3</span>);<br>
-                    <span class="code-keyword">const</span> hasilKali = kali(<span class="code-number">4</span>, <span class="code-number">6</span>);
+                    <span class="code-comment">// Variabel const tidak dapat diubah</span><br>
+                    <span class="code-comment">// umur = 21; // Akan menyebabkan error</span>
                 </code>
             </div>
             
             <div class="example-section">
                 <h4>Contoh Output:</h4>
-                <button class="run-btn" onclick="runFunctionExample()">
+                <button class="run-btn" onclick="runVariableExample()">
                     <i class="fas fa-play"></i> Jalankan Contoh
                 </button>
-                <div class="output" id="function-output"></div>
+                <div class="output" id="variable-output"></div>
             </div>
-        </div>
-        
-        <div id="method" class="content-section" style="display: none;">
-            <h2><i class="fas fa-cogs"></i> Method</h2>
-            <p>Method adalah fungsi yang terkait dengan objek. Dalam JavaScript, method adalah properti dari objek yang berisi definisi fungsi.</p>
             
-            <h3>Jenis-jenis Method</h3>
+            <h3><i class="fas fa-list-alt"></i> Tipe Data</h3>
+            <p>JavaScript memiliki beberapa tipe data dasar:</p>
             <ul>
-                <li><strong>Built-in Methods</strong> - Method yang sudah disediakan oleh JavaScript</li>
-                <li><strong>Custom Methods</strong> - Method yang dibuat sendiri oleh developer</li>
+                <li><strong>String</strong> - Teks, contoh: "Halo Dunia"</li>
+                <li><strong>Number</strong> - Angka, contoh: 123, 3.14</li>
+                <li><strong>Boolean</strong> - true atau false</li>
+                <li><strong>Array</strong> - Kumpulan nilai, contoh: [1, 2, 3]</li>
+                <li><strong>Object</strong> - Pasangan key-value, contoh: {nama: "Budi", umur: 20}</li>
+                <li><strong>undefined</strong> - Variabel yang belum diberi nilai</li>
+                <li><strong>null</strong> - Nilai kosong</li>
             </ul>
             
-            <h3>Contoh Method</h3>
             <div class="code-block">
                 <code>
-                    <span class="code-comment">// Built-in Methods</span><br>
-                    <span class="code-keyword">const</span> pesan = <span class="code-string">"Hello World"</span>;<br>
-                    <span class="code-keyword">const</span> pesanKapital = pesan.toUpperCase(); <span class="code-comment">// toUpperCase() adalah method</span><br><br>
+                    <span class="code-comment">// Tipe data String</span><br>
+                    <span class="code-keyword">let</span> teks = <span class="code-string">"Hello World"</span>;<br><br>
                     
-                    <span class="code-comment">// Custom Methods dalam objek</span><br>
-                    <span class="code-keyword">const</span> kalkulator = {<br>
-                    &nbsp;&nbsp;nilai: <span class="code-number">0</span>,<br>
-                    &nbsp;&nbsp;tambah: <span class="code-keyword">function</span>(angka) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.nilai += angka;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">this</span>.nilai;<br>
-                    &nbsp;&nbsp;},<br>
-                    &nbsp;&nbsp;kurang: <span class="code-keyword">function</span>(angka) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.nilai -= angka;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">this</span>.nilai;<br>
-                    &nbsp;&nbsp;},<br>
-                    &nbsp;&nbsp;reset: <span class="code-keyword">function</span>() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.nilai = <span class="code-number">0</span>;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">this</span>.nilai;<br>
-                    &nbsp;&nbsp;}<br>
+                    <span class="code-comment">// Tipe data Number</span><br>
+                    <span class="code-keyword">let</span> angka = <span class="code-number">42</span>;<br>
+                    <span class="code-keyword">let</span> desimal = <span class="code-number">3.14</span>;<br><br>
+                    
+                    <span class="code-comment">// Tipe data Boolean</span><br>
+                    <span class="code-keyword">let</span> benar = <span class="code-keyword">true</span>;<br>
+                    <span class="code-keyword">let</span> salah = <span class="code-keyword">false</span>;<br><br>
+                    
+                    <span class="code-comment">// Tipe data Array</span><br>
+                    <span class="code-keyword">let</span> buah = [<span class="code-string">"Apel"</span>, <span class="code-string">"Mangga"</span>, <span class="code-string">"Jeruk"</span>];<br><br>
+                    
+                    <span class="code-comment">// Tipe data Object</span><br>
+                    <span class="code-keyword">let</span> orang = {<br>
+                    &nbsp;&nbsp;nama: <span class="code-string">"Budi"</span>,<br>
+                    &nbsp;&nbsp;umur: <span class="code-number">20</span>,<br>
+                    &nbsp;&nbsp;alamat: <span class="code-string">"Jakarta"</span><br>
                     };
                 </code>
             </div>
             
             <div class="example-section">
                 <h4>Contoh Output:</h4>
-                <button class="run-btn" onclick="runMethodExample()">
+                <button class="run-btn" onclick="runDataTypeExample()">
                     <i class="fas fa-play"></i> Jalankan Contoh
                 </button>
-                <div class="output" id="method-output"></div>
+                <div class="output" id="datatype-output"></div>
             </div>
-        </div>
-        
-        <div id="array" class="content-section" style="display: none;">
-            <h2><i class="fas fa-layer-group"></i> Array</h2>
-            <p>Array adalah struktur data yang digunakan untuk menyimpan kumpulan nilai dalam satu variabel. Setiap nilai dalam array disebut elemen, dan setiap elemen memiliki posisi yang disebut index (dimulai dari 0).</p>
             
-            <h3>Method Array yang Umum Digunakan</h3>
+            <h3><i class="fas fa-calculator"></i> Operator</h3>
+            <p>Operator digunakan untuk melakukan operasi pada data:</p>
             <ul>
-                <li><strong>push()</strong> - Menambahkan elemen di akhir array</li>
-                <li><strong>pop()</strong> - Menghapus elemen terakhir array</li>
-                <li><strong>shift()</strong> - Menghapus elemen pertama array</li>
-                <li><strong>unshift()</strong> - Menambahkan elemen di awal array</li>
-                <li><strong>map()</strong> - Membuat array baru dengan hasil pemanggilan fungsi pada setiap elemen</li>
-                <li><strong>filter()</strong> - Membuat array baru dengan elemen yang lolos tes</li>
-                <li><strong>forEach()</strong> - Menjalankan fungsi untuk setiap elemen array</li>
+                <li><strong>Aritmatika</strong> - +, -, *, /, % (modulus)</li>
+                <li><strong>Perbandingan</strong> - ==, !=, ===, !==, >, <, >=, <=</li>
+                <li><strong>Logika</strong> - && (dan), || (atau), ! (tidak)</li>
+                <li><strong>Penugasan</strong> - =, +=, -=, *=, /=</li>
             </ul>
             
-            <h3>Contoh Array</h3>
             <div class="code-block">
                 <code>
-                    <span class="code-comment">// Membuat array</span><br>
-                    <span class="code-keyword">const</span> buah = [<span class="code-string">"Apel"</span>, <span class="code-string">"Mangga"</span>, <span class="code-string">"Jeruk"</span>];<br><br>
+                    <span class="code-comment">// Operator Aritmatika</span><br>
+                    <span class="code-keyword">let</span> a = <span class="code-number">10</span>, b = <span class="code-number">5</span>;<br>
+                    <span class="code-keyword">let</span> tambah = a + b; <span class="code-comment">// 15</span><br>
+                    <span class="code-keyword">let</span> kurang = a - b; <span class="code-comment">// 5</span><br>
+                    <span class="code-keyword">let</span> kali = a * b; <span class="code-comment">// 50</span><br>
+                    <span class="code-keyword">let</span> bagi = a / b; <span class="code-comment">// 2</span><br>
+                    <span class="code-keyword">let</span> modulus = a % b; <span class="code-comment">// 0</span><br><br>
                     
-                    <span class="code-comment">// Mengakses elemen array</span><br>
-                    <span class="code-keyword">const</span> buahPertama = buah[<span class="code-number">0</span>]; <span class="code-comment">// "Apel"</span><br><br>
+                    <span class="code-comment">// Operator Perbandingan</span><br>
+                    <span class="code-keyword">let</span> samaDengan = a == b; <span class="code-comment">// false</span><br>
+                    <span class="code-keyword">let</span> lebihBesar = a > b; <span class="code-comment">// true</span><br><br>
                     
-                    <span class="code-comment">// Mengubah elemen array</span><br>
-                    buah[<span class="code-number">1</span>] = <span class="code-string">"Pisang"</span>; <span class="code-comment">// ["Apel", "Pisang", "Jeruk"]</span><br><br>
-                    
-                    <span class="code-comment">// Menambahkan elemen</span><br>
-                    buah.push(<span class="code-string">"Anggur"</span>); <span class="code-comment">// ["Apel", "Pisang", "Jeruk", "Anggur"]</span><br><br>
-                    
-                    <span class="code-comment">// Menghapus elemen terakhir</span><br>
-                    buah.pop(); <span class="code-comment">// ["Apel", "Pisang", "Jeruk"]</span><br><br>
-                    
-                    <span class="code-comment">// Method map untuk transformasi array</span><br>
-                    <span class="code-keyword">const</span> bilangan = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>];<br>
-                    <span class="code-keyword">const</span> dikaliDua = bilangan.map(<span class="code-keyword">function</span>(angka) {<br>
-                    &nbsp;&nbsp;<span class="code-keyword">return</span> angka * <span class="code-number">2</span>;<br>
-                    }); <span class="code-comment">// [2, 4, 6, 8]</span>
+                    <span class="code-comment">// Operator Logika</span><br>
+                    <span class="code-keyword">let</span> dan = (a > <span class="code-number">5</span>) && (b > <span class="code-number">3</span>); <span class="code-comment">// true</span><br>
+                    <span class="code-keyword">let</span> atau = (a > <span class="code-number">15</span>) || (b > <span class="code-number">3</span>); <span class="code-comment">// true</span>
                 </code>
             </div>
             
             <div class="example-section">
                 <h4>Contoh Output:</h4>
-                <button class="run-btn" onclick="runArrayExample()">
+                <button class="run-btn" onclick="runOperatorExample()">
                     <i class="fas fa-play"></i> Jalankan Contoh
                 </button>
-                <div class="output" id="array-output"></div>
+                <div class="output" id="operator-output"></div>
+            </div>
+            
+            <h3><i class="fas fa-code-branch"></i> Kondisional</h3>
+            <p>Kondisional digunakan untuk pengambilan keputusan dalam kode:</p>
+            <ul>
+                <li><strong>if</strong> - Menjalankan kode jika kondisi benar</li>
+                <li><strong>else if</strong> - Mengecek kondisi alternatif</li>
+                <li><strong>else</strong> - Menjalankan kode jika semua kondisi salah</li>
+                <li><strong>switch</strong> - Menjalankan kode berdasarkan nilai variabel</li>
+            </ul>
+            
+            <div class="code-block">
+                <code>
+                    <span class="code-comment">// Kondisional if-else</span><br>
+                    <span class="code-keyword">let</span> nilai = <span class="code-number">85</span>;<br>
+                    <span class="code-keyword">let</span> hasil;<br><br>
+                    
+                    <span class="code-keyword">if</span> (nilai >= <span class="code-number">90</span>) {<br>
+                    &nbsp;&nbsp;hasil = <span class="code-string">"A"</span>;<br>
+                    } <span class="code-keyword">else if</span> (nilai >= <span class="code-number">80</span>) {<br>
+                    &nbsp;&nbsp;hasil = <span class="code-string">"B"</span>;<br>
+                    } <span class="code-keyword">else if</span> (nilai >= <span class="code-number">70</span>) {<br>
+                    &nbsp;&nbsp;hasil = <span class="code-string">"C"</span>;<br>
+                    } <span class="code-keyword">else</span> {<br>
+                    &nbsp;&nbsp;hasil = <span class="code-string">"D"</span>;<br>
+                    }<br><br>
+                    
+                    <span class="code-comment">// Kondisional switch</span><br>
+                    <span class="code-keyword">let</span> hari = <span class="code-string">"Senin"</span>;<br>
+                    <span class="code-keyword">let</span> aktivitas;<br><br>
+                    
+                    <span class="code-keyword">switch</span> (hari) {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">case</span> <span class="code-string">"Senin"</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;aktivitas = <span class="code-string">"Meeting mingguan"</span>;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">break</span>;<br>
+                    &nbsp;&nbsp;<span class="code-keyword">case</span> <span class="code-string">"Jumat"</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;aktivitas = <span class="code-string">"Koding santai"</span>;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">break</span>;<br>
+                    &nbsp;&nbsp;<span class="code-keyword">default</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;aktivitas = <span class="code-string">"Bekerja seperti biasa"</span>;<br>
+                    }
+                </code>
+            </div>
+            
+            <div class="example-section">
+                <h4>Contoh Output:</h4>
+                <button class="run-btn" onclick="runConditionalExample()">
+                    <i class="fas fa-play"></i> Jalankan Contoh
+                </button>
+                <div class="output" id="conditional-output"></div>
+            </div>
+            
+            <h3><i class="fas fa-redo"></i> Perulangan</h3>
+            <p>Perulangan digunakan untuk mengeksekusi kode berulang kali:</p>
+            <ul>
+                <li><strong>for</strong> - Perulangan dengan jumlah iterasi tertentu</li>
+                <li><strong>while</strong> - Perulangan selama kondisi benar</li>
+                <li><strong>do while</strong> - Perulangan yang dijalankan minimal sekali</li>
+                <li><strong>for...of</strong> - Perulangan untuk iterable objects (ES6)</li>
+            </ul>
+            
+            <div class="code-block">
+                <code>
+                    <span class="code-comment">// Perulangan for</span><br>
+                    <span class="code-keyword">let</span> outputFor = <span class="code-string">""</span>;<br>
+                    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> i = <span class="code-number">1</span>; i <= <span class="code-number">5</span>; i++) {<br>
+                    &nbsp;&nbsp;outputFor += i + <span class="code-string">" "</span>;<br>
+                    }<br><br>
+                    
+                    <span class="code-comment">// Perulangan while</span><br>
+                    <span class="code-keyword">let</span> outputWhile = <span class="code-string">""</span>;<br>
+                    <span class="code-keyword">let</span> j = <span class="code-number">1</span>;<br>
+                    <span class="code-keyword">while</span> (j <= <span class="code-number">5</span>) {<br>
+                    &nbsp;&nbsp;outputWhile += j + <span class="code-string">" "</span>;<br>
+                    &nbsp;&nbsp;j++;<br>
+                    }<br><br>
+                    
+                    <span class="code-comment">// Perulangan for...of</span><br>
+                    <span class="code-keyword">let</span> buah = [<span class="code-string">"Apel"</span>, <span class="code-string">"Mangga"</span>, <span class="code-string">"Jeruk"</span>];<br>
+                    <span class="code-keyword">let</span> outputForOf = <span class="code-string">""</span>;<br>
+                    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> item of buah) {<br>
+                    &nbsp;&nbsp;outputForOf += item + <span class="code-string">" "</span>;<br>
+                    }
+                </code>
+            </div>
+            
+            <div class="example-section">
+                <h4>Contoh Output:</h4>
+                <button class="run-btn" onclick="runLoopExample()">
+                    <i class="fas fa-play"></i> Jalankan Contoh
+                </button>
+                <div class="output" id="loop-output"></div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="run-btn" onclick="runAllExamples()">
+                    <i class="fas fa-play-circle"></i> Jalankan Semua Contoh
+                </button>
+                <button class="run-btn" onclick="resetAllOutputs()">
+                    <i class="fas fa-undo"></i> Reset Semua Output
+                </button>
             </div>
         </div>
         
@@ -387,124 +428,174 @@
     </div>
 
     <script>
-        // Fungsi untuk menampilkan section yang dipilih
-        function showSection(sectionId) {
-            // Sembunyikan semua section
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.style.display = 'none';
-            });
+        // Contoh untuk Variabel
+        function runVariableExample() {
+            let nama = "Budi";
+            const umur = 20;
+            var alamat = "Jakarta";
             
-            // Tampilkan section yang dipilih
-            document.getElementById(sectionId).style.display = 'block';
+            // Mengubah nilai variabel let
+            nama = "Andi";
             
-            // Update status aktif pada tombol navigasi
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            event.target.classList.add('active');
+            const output = document.getElementById('variable-output');
+            output.innerHTML = `
+                <div>Nama: ${nama}</div>
+                <div>Umur: ${umur}</div>
+                <div>Alamat: ${alamat}</div>
+                <div class="text-sm text-gray-400 mt-2">*Variabel const tidak dapat diubah setelah dideklarasikan</div>
+            `;
         }
         
-        // Contoh untuk Function
-        function runFunctionExample() {
-            // Function Declaration
-            function sapa(nama) {
-                return "Halo, " + nama + "!";
+        // Contoh untuk Tipe Data
+        function runDataTypeExample() {
+            let teks = "Hello World";
+            let angka = 42;
+            let desimal = 3.14;
+            let benar = true;
+            let salah = false;
+            let buah = ["Apel", "Mangga", "Jeruk"];
+            let orang = {
+                nama: "Budi",
+                umur: 20,
+                alamat: "Jakarta"
+            };
+            let kosong = null;
+            let tidakTerdefinisi;
+            
+            const output = document.getElementById('datatype-output');
+            output.innerHTML = `
+                <div>String: "${teks}" (${typeof teks})</div>
+                <div>Number: ${angka} (${typeof angka})</div>
+                <div>Float: ${desimal} (${typeof desimal})</div>
+                <div>Boolean: ${benar} (${typeof benar})</div>
+                <div>Array: [${buah.join(", ")}] (${typeof buah})</div>
+                <div>Object: ${JSON.stringify(orang)} (${typeof orang})</div>
+                <div>Null: ${kosong} (${typeof kosong})</div>
+                <div>Undefined: ${tidakTerdefinisi} (${typeof tidakTerdefinisi})</div>
+            `;
+        }
+        
+        // Contoh untuk Operator
+        function runOperatorExample() {
+            let a = 10, b = 5;
+            let tambah = a + b;
+            let kurang = a - b;
+            let kali = a * b;
+            let bagi = a / b;
+            let modulus = a % b;
+            
+            let samaDengan = a == b;
+            let identik = a === b;
+            let lebihBesar = a > b;
+            
+            let dan = (a > 5) && (b > 3);
+            let atau = (a > 15) || (b > 3);
+            let tidak = !(a > 5);
+            
+            const output = document.getElementById('operator-output');
+            output.innerHTML = `
+                <div class="mb-2"><strong>Aritmatika:</strong></div>
+                <div>10 + 5 = ${tambah}</div>
+                <div>10 - 5 = ${kurang}</div>
+                <div>10 * 5 = ${kali}</div>
+                <div>10 / 5 = ${bagi}</div>
+                <div>10 % 5 = ${modulus}</div>
+                
+                <div class="mt-4 mb-2"><strong>Perbandingan:</strong></div>
+                <div>10 == 5: ${samaDengan}</div>
+                <div>10 === 5: ${identik}</div>
+                <div>10 > 5: ${lebihBesar}</div>
+                
+                <div class="mt-4 mb-2"><strong>Logika:</strong></div>
+                <div>(10 > 5) && (5 > 3): ${dan}</div>
+                <div>(10 > 15) || (5 > 3): ${atau}</div>
+                <div>!(10 > 5): ${tidak}</div>
+            `;
+        }
+        
+        // Contoh untuk Kondisional
+        function runConditionalExample() {
+            let nilai = 85;
+            let hasil;
+            
+            if (nilai >= 90) {
+                hasil = "A";
+            } else if (nilai >= 80) {
+                hasil = "B";
+            } else if (nilai >= 70) {
+                hasil = "C";
+            } else {
+                hasil = "D";
             }
             
-            // Function Expression
-            const tambah = function(a, b) {
-                return a + b;
-            };
+            let hari = "Senin";
+            let aktivitas;
             
-            // Arrow Function
-            const kali = (a, b) => a * b;
+            switch (hari) {
+                case "Senin":
+                    aktivitas = "Meeting mingguan";
+                    break;
+                case "Jumat":
+                    aktivitas = "Koding santai";
+                    break;
+                default:
+                    aktivitas = "Bekerja seperti biasa";
+            }
             
-            // Memanggil fungsi
-            const hasilSapa = sapa("Budi");
-            const hasilTambah = tambah(5, 3);
-            const hasilKali = kali(4, 6);
-            
-            // Tampilkan output
-            const output = document.getElementById('function-output');
+            const output = document.getElementById('conditional-output');
             output.innerHTML = `
-                <div>${hasilSapa}</div>
-                <div>5 + 3 = ${hasilTambah}</div>
-                <div>4 × 6 = ${hasilKali}</div>
+                <div><strong>If-Else:</strong></div>
+                <div>Nilai: ${nilai} → Grade: ${hasil}</div>
+                
+                <div class="mt-3"><strong>Switch:</strong></div>
+                <div>Hari: ${hari} → Aktivitas: ${aktivitas}</div>
             `;
         }
         
-        // Contoh untuk Method
-        function runMethodExample() {
-            // Built-in Methods
-            const pesan = "Hello World";
-            const pesanKapital = pesan.toUpperCase();
-            const pesanKecil = pesan.toLowerCase();
+        // Contoh untuk Perulangan
+        function runLoopExample() {
+            let outputFor = "";
+            for (let i = 1; i <= 5; i++) {
+                outputFor += i + " ";
+            }
             
-            // Custom Methods dalam objek
-            const kalkulator = {
-                nilai: 0,
-                tambah: function(angka) {
-                    this.nilai += angka;
-                    return this.nilai;
-                },
-                kurang: function(angka) {
-                    this.nilai -= angka;
-                    return this.nilai;
-                },
-                reset: function() {
-                    this.nilai = 0;
-                    return this.nilai;
-                }
-            };
+            let outputWhile = "";
+            let j = 1;
+            while (j <= 5) {
+                outputWhile += j + " ";
+                j++;
+            }
             
-            // Menggunakan kalkulator
-            kalkulator.tambah(10);
-            kalkulator.kurang(3);
-            const hasilAkhir = kalkulator.nilai;
+            let buah = ["Apel", "Mangga", "Jeruk"];
+            let outputForOf = "";
+            for (let item of buah) {
+                outputForOf += item + " ";
+            }
             
-            // Tampilkan output
-            const output = document.getElementById('method-output');
+            const output = document.getElementById('loop-output');
             output.innerHTML = `
-                <div>Pesan asli: "${pesan}"</div>
-                <div>toUpperCase(): "${pesanKapital}"</div>
-                <div>toLowerCase(): "${pesanKecil}"</div>
-                <div>Hasil kalkulator: 10 - 3 = ${hasilAkhir}</div>
+                <div><strong>For Loop:</strong> ${outputFor}</div>
+                <div><strong>While Loop:</strong> ${outputWhile}</div>
+                <div><strong>For...of Loop:</strong> ${outputForOf}</div>
             `;
         }
         
-        // Contoh untuk Array
-        function runArrayExample() {
-            // Membuat array
-            const buah = ["Apel", "Mangga", "Jeruk"];
-            
-            // Mengakses elemen array
-            const buahPertama = buah[0];
-            
-            // Mengubah elemen array
-            buah[1] = "Pisang";
-            
-            // Menambahkan elemen
-            buah.push("Anggur");
-            
-            // Method map untuk transformasi array
-            const bilangan = [1, 2, 3, 4];
-            const dikaliDua = bilangan.map(function(angka) {
-                return angka * 2;
-            });
-            
-            // Method filter
-            const lebihBesarDariDua = bilangan.filter(angka => angka > 2);
-            
-            // Tampilkan output
-            const output = document.getElementById('array-output');
-            output.innerHTML = `
-                <div>Array buah: [${buah.join(", ")}]</div>
-                <div>Buah pertama: ${buahPertama}</div>
-                <div>Array bilangan: [${bilangan.join(", ")}]</div>
-                <div>Dikali dua: [${dikaliDua.join(", ")}]</div>
-                <div>Filter > 2: [${lebihBesarDariDua.join(", ")}]</div>
-            `;
+        // Jalankan semua contoh
+        function runAllExamples() {
+            runVariableExample();
+            runDataTypeExample();
+            runOperatorExample();
+            runConditionalExample();
+            runLoopExample();
+        }
+        
+        // Reset semua output
+        function resetAllOutputs() {
+            document.getElementById('variable-output').innerHTML = '';
+            document.getElementById('datatype-output').innerHTML = '';
+            document.getElementById('operator-output').innerHTML = '';
+            document.getElementById('conditional-output').innerHTML = '';
+            document.getElementById('loop-output').innerHTML = '';
         }
     </script>
 </body>
