@@ -14,11 +14,7 @@ const materi = [
     type: "page",
     link: "materi/forEach.html"
   },
-  {
-    title: "try catch, switch,Casey, looping",
-    type: "page",
-    link: "materi/looping.html"
-  },
+
   {
     title: "spread, rest operator, destructuring",
     type: "page",
